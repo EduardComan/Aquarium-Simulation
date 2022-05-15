@@ -20,14 +20,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Lamp.vs">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-    <FxCompile Include="Lamp.fs">
-      <Filter>Resource Files</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
