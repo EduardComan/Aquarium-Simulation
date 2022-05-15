@@ -1,4 +1,0 @@
-﻿  Source.cpp
-D:\Facultate\Anul II\Semestrul 2\SMM\Laborator\ProjectAquarium\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(262,15): warning C4305: '+=': truncation from 'double' to 'float'
-D:\Facultate\Anul II\Semestrul 2\SMM\Laborator\ProjectAquarium\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(266,15): warning C4305: '-=': truncation from 'double' to 'float'
-  ProiectSMM-Aquarium.vcxproj -> D:\Facultate\Anul II\Semestrul 2\SMM\Laborator\ProjectAquarium\ProiectSMM-Aquarium\Debug\ProiectSMM-Aquarium.exe
