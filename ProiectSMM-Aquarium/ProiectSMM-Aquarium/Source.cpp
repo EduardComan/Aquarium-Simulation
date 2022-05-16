@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <math.h> 
 
-#include "Model.h"
+
 
 #include <GL/glew.h>
 

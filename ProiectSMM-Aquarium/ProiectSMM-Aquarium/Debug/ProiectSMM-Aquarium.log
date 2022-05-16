@@ -1,0 +1,25 @@
+﻿  IndexBuffer.cpp
+  Mesh.cpp
+  ObjLoader.cpp
+  Renderer.cpp
+  Shader.cpp
+  Source.cpp
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(262,15): warning C4305: '+=': truncation from 'double' to 'float'
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(266,15): warning C4305: '-=': truncation from 'double' to 'float'
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(310,2): error C2065: 'Model': undeclared identifier
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(310,8): error C2146: syntax error: missing ';' before identifier 'aquarium'
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(310,8): error C3861: 'aquarium': identifier not found
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(312,2): error C2065: 'Shader': undeclared identifier
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(312,9): error C2146: syntax error: missing ';' before identifier 'lampShader'
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(312,9): error C3861: 'lampShader': identifier not found
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(327,3): error C2065: 'lampShader': undeclared identifier
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(328,3): error C2065: 'lampShader': undeclared identifier
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(329,3): error C2065: 'lampShader': undeclared identifier
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(330,3): error C2065: 'lampShader': undeclared identifier
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(332,3): error C2065: 'aquarium': undeclared identifier
+E:\Facultate\Anul 2 Sem 2\smm\Aquarium-Simulation\ProiectSMM-Aquarium\ProiectSMM-Aquarium\Source.cpp(332,17): error C2065: 'lampShader': undeclared identifier
+  stb_image.cpp
+  Texture.cpp
+  VertexArray.cpp
+  VertexBuffer.cpp
+  Generating Code...
