@@ -48,6 +48,15 @@
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Skybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowFrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterFrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h">
@@ -80,5 +89,37 @@
     <ClInclude Include="VertexBufferLayout.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Skybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowFrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterFrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resources\shaders\depthViewer.shader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\shaders\glass.shader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\shaders\lightSource.shader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\shaders\object.shader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\shaders\shadowMap.shader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\shaders\skybox.shader">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="resources\shaders\water.shader">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

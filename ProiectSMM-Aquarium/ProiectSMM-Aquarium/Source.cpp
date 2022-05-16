@@ -1,390 +1,1029 @@
-// Lab7 - Iluminare Phong simpla.cpp : Defines the entry point for the console application.
-//
-#include <stb_image.h>
-
-#include <stdlib.h> // necesare pentru citirea shader-elor
-#include <stdio.h>
-#include <math.h> 
-
-
-
 #include <GL/glew.h>
-
-#include <GLM.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtc/type_ptr.hpp>
-
 #include <glfw3.h>
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
 
 #include <iostream>
-#include <fstream>
-#include <sstream>
+#include <vector>
+#include <array>
+#include <algorithm>
 
-#pragma comment (lib, "glfw3dll.lib")
-#pragma comment (lib, "glew32.lib")
-#pragma comment (lib, "OpenGL32.lib")
+#include "Mesh.h"
+#include "ObjLoader.h"
+#include "WaterFrameBuffer.h"
+#include "ShadowFrameBuffer.h"
+#include "Skybox.h"
 
-// settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
-
-enum ECameraMovementType
+Mesh InitSandMesh(const Texture& texture)
 {
-	UNKNOWN,
-	FORWARD,
-	BACKWARD,
-	LEFT,
-	RIGHT,
-	UP,
-	DOWN
-};
+    std::vector<float> vertices =
+    {
+        // Vertex coords         //tex coords   // Normals         //
+         -10.0f,  0.0f,  0.5f,     0.0f, 0.0f,   0.0f,  0.0f,  1.0f, //0  0 //front
+          10.0f,  0.0f,  0.5f,     1.0f, 0.0f,   0.0f,  0.0f,  1.0f, //1  1
+          10.0f,  0.5f,  0.5f,     1.0f, 1.0f,   0.0f,  0.0f,  1.0f, //2  2
+         -10.0f,  0.5f,  0.5f,     0.0f, 1.0f,   0.0f,  0.0f,  1.0f, //3  3
 
-class Camera
+         -10.0f,  0.0f, -7.5f,     1.0f, 0.0f,   0.0f,  0.0f, -1.0f, //4  4 //back
+         -10.0f,  0.5f, -7.5f,     1.0f, 1.0f,   0.0f,  0.0f, -1.0f, //5  5
+          10.0f,  0.5f, -7.5f,     0.0f, 1.0f,   0.0f,  0.0f, -1.0f, //6  6
+          10.0f,  0.0f, -7.5f,     0.0f, 0.0f,   0.0f,  0.0f, -1.0f, //7  7
+
+          10.0f,  0.5f,  0.5f,     1.0f, 0.0f,   0.0f,  1.0f,  0.0f, //2  8 //top
+         -10.0f,  0.5f,  0.5f,     0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //3  9
+         -10.0f,  0.5f, -7.5f,     0.0f, 1.0f,   0.0f,  1.0f,  0.0f, //5  10
+          10.0f,  0.5f, -7.5f,     1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //6  11
+
+         -10.0f,  0.0f,  0.5f,     0.0f, 1.0f,   0.0f, -1.0f,  0.0f, //0  12 //bottom
+          10.0f,  0.0f,  0.5f,     1.0f, 1.0f,   0.0f, -1.0f,  0.0f, //1  13
+         -10.0f,  0.0f, -7.5f,     0.0f, 0.0f,   0.0f, -1.0f,  0.0f, //4  14
+          10.0f,  0.0f, -7.5f,     1.0f, 0.0f,   0.0f, -1.0f,  0.0f, //7  15
+
+         -10.0f,  0.0f,  0.5f,     1.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //0  16 //left side
+         -10.0f,  0.5f,  0.5f,     1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //3  17
+         -10.0f,  0.0f, -7.5f,     0.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //4  18
+         -10.0f,  0.5f, -7.5f,     0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //5  19
+
+          10.0f,  0.0f,  0.5f,     0.0f, 0.0f,   1.0f,  0.0f,  0.0f, //1  20 //right side
+          10.0f,  0.5f,  0.5f,     0.0f, 1.0f,   1.0f,  0.0f,  0.0f, //2  21
+          10.0f,  0.5f, -7.5f,     1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //6  22
+          10.0f,  0.0f, -7.5f,     1.0f, 0.0f,   1.0f,  0.0f,  0.0f, //7  23
+    };
+
+    std::vector<unsigned int> indices =
+    {
+        0, 1, 2,//front
+        2, 3, 0,
+
+        4, 7, 6,//back
+        6, 5, 4,
+
+        9, 8, 11,//top
+        11, 10, 9,
+
+        12, 13, 15,//bottom
+        15, 14, 12,
+
+        16, 18, 19,//left side
+        19, 17, 16,
+
+        20, 23, 22,//right side
+        22, 21, 20
+    };
+
+    return Mesh(vertices, indices, texture);
+}
+Mesh InitAquariumBaseMesh(const Texture& texture)
 {
-private:
-	// Default camera values
-	const float zNEAR = 0.1f;
-	const float zFAR = 500.f;
-	const float YAW = -90.0f;
-	const float PITCH = 0.0f;
-	const float FOV = 45.0f;
-	glm::vec3 startPosition;
+    std::vector<float> vertices =
+    {     /*****************  FLOOR  ********************/
+        // Vertex coords         // tex coords    // Normals
+         -10.0f,  0.0f,  0.5f,       0.0f, 0.0f,   0.0f,  0.0f,  1.0f, //0  0 //front
+          10.0f,  0.0f,  0.5f,       1.0f, 0.0f,   0.0f,  0.0f,  1.0f, //1  1
+          10.0f,  0.1f,  0.5f,       1.0f, 1.0f,   0.0f,  0.0f,  1.0f, //2  2
+         -10.0f,  0.1f,  0.5f,       0.0f, 1.0f,   0.0f,  0.0f,  1.0f, //3  3
 
-public:
-	Camera(const int width, const int height, const glm::vec3& position)
-	{
-		startPosition = position;
-		Set(width, height, position);
-	}
+         -10.0f,  0.0f, -7.5f,       1.0f, 0.0f,   0.0f,  0.0f, -1.0f, //4  4 //back
+         -10.0f,  0.1f, -7.5f,       1.0f, 1.0f,   0.0f,  0.0f, -1.0f, //5  5
+          10.0f,  0.1f, -7.5f,       0.0f, 1.0f,   0.0f,  0.0f, -1.0f, //6  6
+          10.0f,  0.0f, -7.5f,       0.0f, 0.0f,   0.0f,  0.0f, -1.0f, //7  7
 
-	void Set(const int width, const int height, const glm::vec3& position)
-	{
-		this->isPerspective = true;
-		this->yaw = YAW;
-		this->pitch = PITCH;
+          10.0f,  0.1f,  0.5f,       1.0f, 0.0f,   0.0f,  1.0f,  0.0f, //2  8 //top
+         -10.0f,  0.1f,  0.5f,       0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //3  9
+         -10.0f,  0.1f, -7.5f,       0.0f, 1.0f,   0.0f,  1.0f,  0.0f, //5  10
+          10.0f,  0.1f, -7.5f,       1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //6  11
 
-		this->FoVy = FOV;
-		this->width = width;
-		this->height = height;
-		this->zNear = zNEAR;
-		this->zFar = zFAR;
+         -10.0f,  0.0f,  0.5f,       0.0f, 1.0f,   0.0f, -1.0f,  0.0f, //0  12 //bottom
+          10.0f,  0.0f,  0.5f,       1.0f, 1.0f,   0.0f, -1.0f,  0.0f, //1  13
+         -10.0f,  0.0f, -7.5f,       0.0f, 0.0f,   0.0f, -1.0f,  0.0f, //4  14
+          10.0f,  0.0f, -7.5f,       1.0f, 0.0f,   0.0f, -1.0f,  0.0f, //7  15
 
-		this->worldUp = glm::vec3(0, 1, 0);
-		this->position = position;
+         -10.0f,  0.0f,  0.5f,       1.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //0  16 //left side
+         -10.0f,  0.1f,  0.5f,       1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //3  17
+         -10.0f,  0.0f, -7.5f,       0.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //4  18
+         -10.0f,  0.1f, -7.5f,       0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //5  19
 
-		lastX = width / 2.0f;
-		lastY = height / 2.0f;
-		bFirstMouseMove = true;
-
-		UpdateCameraVectors();
-	}
-
-	void Reset(const int width, const int height)
-	{
-		Set(width, height, startPosition);
-	}
-
-	void Reshape(int windowWidth, int windowHeight)
-	{
-		width = windowWidth;
-		height = windowHeight;
-
-		// define the viewport transformation
-		glViewport(0, 0, windowWidth, windowHeight);
-	}
-
-	const glm::mat4 GetViewMatrix() const
-	{
-		// Returns the View Matrix
-		return glm::lookAt(position, position + forward, up);
-	}
-
-	const glm::vec3 GetPosition() const
-	{
-		return position;
-	}
-
-	const glm::mat4 GetProjectionMatrix() const
-	{
-		glm::mat4 Proj = glm::mat4(1);
-		if (isPerspective) {
-			float aspectRatio = ((float)(width)) / height;
-			Proj = glm::perspective(glm::radians(FoVy), aspectRatio, zNear, zFar);
-		}
-		else {
-			float scaleFactor = 2000.f;
-			Proj = glm::ortho<float>(
-				-width / scaleFactor, width / scaleFactor,
-				-height / scaleFactor, height / scaleFactor, -zFar, zFar);
-		}
-		return Proj;
-	}
-
-	void ProcessKeyboard(ECameraMovementType direction, float deltaTime)
-	{
-		float velocity = (float)(cameraSpeedFactor * deltaTime);
-		switch (direction) {
-		case ECameraMovementType::FORWARD:
-			position += forward * velocity;
-			break;
-		case ECameraMovementType::BACKWARD:
-			position -= forward * velocity;
-			break;
-		case ECameraMovementType::LEFT:
-			position -= right * velocity;
-			break;
-		case ECameraMovementType::RIGHT:
-			position += right * velocity;
-			break;
-		case ECameraMovementType::UP:
-			position += up * velocity;
-			break;
-		case ECameraMovementType::DOWN:
-			position -= up * velocity;
-			break;
-		}
-	}
-
-	void MouseControl(float xPos, float yPos)
-	{
-		if (bFirstMouseMove) {
-			lastX = xPos;
-			lastY = yPos;
-			bFirstMouseMove = false;
-		}
-
-		float xChange = xPos - lastX;
-		float yChange = lastY - yPos;
-		lastX = xPos;
-		lastY = yPos;
-
-		if (fabs(xChange) <= 1e-6 && fabs(yChange) <= 1e-6) {
-			return;
-		}
-		xChange *= mouseSensitivity;
-		yChange *= mouseSensitivity;
-
-		ProcessMouseMovement(xChange, yChange);
-	}
-
-	void ProcessMouseScroll(float yOffset)
-	{
-		if (FoVy >= 1.0f && FoVy <= 90.0f) {
-			FoVy -= yOffset;
-		}
-		if (FoVy <= 1.0f)
-			FoVy = 1.0f;
-		if (FoVy >= 90.0f)
-			FoVy = 90.0f;
-	}
-
-private:
-	void ProcessMouseMovement(float xOffset, float yOffset, bool constrainPitch = true)
-	{
-		yaw += xOffset;
-		pitch += yOffset;
-
-		//std::cout << "yaw = " << yaw << std::endl;
-		//std::cout << "pitch = " << pitch << std::endl;
-
-		// Avem grijã sã nu ne dãm peste cap
-		if (constrainPitch) {
-			if (pitch > 89.0f)
-				pitch = 89.0f;
-			if (pitch < -89.0f)
-				pitch = -89.0f;
-		}
-
-		// Se modificã vectorii camerei pe baza unghiurilor Euler
-		UpdateCameraVectors();
-	}
-
-	void UpdateCameraVectors()
-	{
-		// Calculate the new forward vector
-		this->forward.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-		this->forward.y = sin(glm::radians(pitch));
-		this->forward.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-		this->forward = glm::normalize(this->forward);
-		// Also re-calculate the Right and Up vector
-		right = glm::normalize(glm::cross(forward, worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
-		up = glm::normalize(glm::cross(right, forward));
-	}
-
-protected:
-	const float cameraSpeedFactor = 2.5f;
-	const float mouseSensitivity = 0.1f;
-
-	// Perspective properties
-	float zNear;
-	float zFar;
-	float FoVy;
-	int width;
-	int height;
-	bool isPerspective;
-
-	glm::vec3 position;
-	glm::vec3 forward;
-	glm::vec3 right;
-	glm::vec3 up;
-	glm::vec3 worldUp;
-
-	// Euler Angles
-	float yaw;
-	float pitch;
-
-	bool bFirstMouseMove = true;
-	float lastX = 0.f, lastY = 0.f;
-};
+          10.0f,  0.0f,  0.5f,       0.0f, 0.0f,   1.0f,  0.0f,  0.0f, //1  20 //right side
+          10.0f,  0.1f,  0.5f,       0.0f, 1.0f,   1.0f,  0.0f,  0.0f, //2  21
+          10.0f,  0.1f, -7.5f,       1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //6  22
+          10.0f,  0.0f, -7.5f,       1.0f, 0.0f,   1.0f,  0.0f,  0.0f, //7  23
 
 
-GLuint ProjMatrixLocation, ViewMatrixLocation, WorldMatrixLocation;
-Camera* pCamera = nullptr;
+         /*****************  FRONT WALL  ********************/
+         -10.3f,  0.0f,  0.8f,       0.0f, 0.0f,   0.0f,  0.0f,  1.0f, //0  24 //front
+          10.3f,  0.0f,  0.8f,       1.0f, 0.0f,   0.0f,  0.0f,  1.0f, //1  25
+          10.3f,  0.6f,  0.8f,       1.0f, 1.0f,   0.0f,  0.0f,  1.0f, //2  26
+         -10.3f,  0.6f,  0.8f,       0.0f, 1.0f,   0.0f,  0.0f,  1.0f, //3  27
 
-void Cleanup()
+         -10.3f,  0.6f,  0.8f,       0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //3  28 //top
+          10.3f,  0.6f,  0.8f,       1.0f, 0.0f,   0.0f,  1.0f,  0.0f, //2  29
+          10.3f,  0.6f,  0.5f,       1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //6  30
+         -10.3f,  0.6f,  0.5f,       0.0f, 1.0f,   0.0f,  1.0f,  0.0f, //5  31
+
+          10.3f,  0.0f,  0.8f,       1.0f, 0.0f,   1.0f,  0.0f,  0.0f, //1  32 //right side
+          10.3f,  0.0f,  0.5f,       1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //7  33
+          10.3f,  0.6f,  0.5f,       0.0f, 1.0f,   1.0f,  0.0f,  0.0f, //6  34
+          10.3f,  0.6f,  0.8f,       0.0f, 0.0f,   1.0f,  0.0f,  0.0f, //2  35
+
+         -10.3f,  0.0f,  0.5f,       1.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //4  36 //left side
+         -10.3f,  0.0f,  0.8f,       1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //0  37
+         -10.3f,  0.6f,  0.8f,       0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //3  38
+         -10.3f,  0.6f,  0.5f,       0.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //5  39
+
+         -10.3f,  0.0f,  0.8f,       0.0f, 1.0f,   0.0f, -1.0f,  0.0f, //0  40 //bottom
+          10.3f,  0.0f,  0.8f,       1.0f, 1.0f,   0.0f, -1.0f,  0.0f, //1  41
+          10.3f,  0.0f,  0.5f,       1.0f, 0.0f,   0.0f, -1.0f,  0.0f, //7  42
+         -10.3f,  0.0f,  0.5f,       0.0f, 0.0f,   0.0f, -1.0f,  0.0f, //4  43
+
+
+         /*****************  RIGHT WALL  ********************/
+          10.3f,  0.0f,  0.5f,       0.0f, 0.0f,   1.0f,  0.0f,  0.0f, //0  44 //front
+          10.3f,  0.0f, -7.5f,       1.0f, 0.0f,   1.0f,  0.0f,  0.0f, //1  45
+          10.3f,  0.6f, -7.5f,       1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //2  46
+          10.3f,  0.6f,  0.5f,       0.0f, 1.0f,   1.0f,  0.0f,  0.0f, //3  47
+
+          10.3f,  0.6f,  0.5f,       0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //3  48 //top
+          10.3f,  0.6f, -7.5f,       1.0f, 0.0f,   0.0f,  1.0f,  0.0f, //2  49
+          10.0f,  0.6f, -7.5f,       1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //6  50
+          10.0f,  0.6f,  0.5f,       0.0f, 1.0f,   0.0f,  1.0f,  0.0f, //5  51
+
+          10.3f,  0.0f,  0.5f,       0.0f, 1.0f,   0.0f, -1.0f,  0.0f, //0  52 //bottom
+          10.3f,  0.0f, -7.5f,       1.0f, 1.0f,   0.0f, -1.0f,  0.0f, //1  53
+          10.0f,  0.0f, -7.5f,       1.0f, 0.0f,   0.0f, -1.0f,  0.0f, //7  54
+          10.0f,  0.0f,  0.5f,       0.0f, 0.0f,   0.0f, -1.0f,  0.0f, //4  55
+
+
+          /*****************  BACK WALL  ********************/
+          -10.3f,  0.0f, -7.8f,       0.0f, 0.0f,   0.0f,  0.0f, -1.0f, //0  56 //front
+           10.3f,  0.0f, -7.8f,       1.0f, 0.0f,   0.0f,  0.0f, -1.0f, //1  57
+           10.3f,  0.6f, -7.8f,       1.0f, 1.0f,   0.0f,  0.0f, -1.0f, //2  58
+          -10.3f,  0.6f, -7.8f,       0.0f, 1.0f,   0.0f,  0.0f, -1.0f, //3  59
+
+          -10.3f,  0.6f, -7.8f,       0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //3  60 //top
+           10.3f,  0.6f, -7.8f,       1.0f, 0.0f,   0.0f,  1.0f,  0.0f, //2  61
+           10.3f,  0.6f, -7.5f,       1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //6  62
+          -10.3f,  0.6f, -7.5f,       0.0f, 1.0f,   0.0f,  1.0f,  0.0f, //5  63
+
+           10.3f,  0.0f, -7.8f,       1.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //1  64 //right side
+           10.3f,  0.0f, -7.5f,       1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //7  65
+           10.3f,  0.6f, -7.5f,       0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //6  66
+           10.3f,  0.6f, -7.8f,       0.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //2  67
+
+          -10.3f,  0.0f, -7.5f,       1.0f, 0.0f,   1.0f,  0.0f,  0.0f, //4  68 //left side
+          -10.3f,  0.0f, -7.8f,       1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //0  69
+          -10.3f,  0.6f, -7.8f,       0.0f, 1.0f,   1.0f,  0.0f,  0.0f, //3  70
+          -10.3f,  0.6f, -7.5f,       0.0f, 0.0f,   1.0f,  0.0f,  0.0f, //5  71
+
+          -10.3f,  0.0f, -7.8f,       0.0f, 1.0f,   0.0f, -1.0f,  0.0f, //0  72 //bottom
+           10.3f,  0.0f, -7.8f,       1.0f, 1.0f,   0.0f, -1.0f,  0.0f, //1  73
+           10.3f,  0.0f, -7.5f,       1.0f, 0.0f,   0.0f, -1.0f,  0.0f, //7  74
+          -10.3f,  0.0f, -7.5f,       0.0f, 0.0f,   0.0f, -1.0f,  0.0f, //4  75
+
+          /*****************  LEFT WALL  ********************/
+          -10.3f, 0.0f,  0.5f,        0.0f, 0.0f,   -1.0f,  0.0f,  0.0f, //0  76 //front
+          -10.3f, 0.0f, -7.5f,        1.0f, 0.0f,   -1.0f,  0.0f,  0.0f, //1  77
+          -10.3f, 0.6f, -7.5f,        1.0f, 1.0f,   -1.0f,  0.0f,  0.0f, //2  78
+          -10.3f, 0.6f,  0.5f,        0.0f, 1.0f,   -1.0f,  0.0f,  0.0f, //3  79
+
+          -10.3f, 0.6f,  0.5f,        0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //3  80 //top
+          -10.3f, 0.6f, -7.5f,        1.0f, 0.0f,   0.0f,  1.0f,  0.0f, //2  81
+          -10.0f, 0.6f, -7.5f,        1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //6  82
+          -10.0f, 0.6f,  0.5f,        0.0f, 1.0f,   0.0f,  1.0f,  0.0f, //5  83
+
+          -10.3f, 0.0f,  0.5f,        0.0f, 1.0f,   0.0f, -1.0f,  0.0f, //0  84 //bottom
+          -10.3f, 0.0f, -7.5f,        1.0f, 1.0f,   0.0f, -1.0f,  0.0f, //1  85
+          -10.0f, 0.0f, -7.5f,        1.0f, 0.0f,   0.0f, -1.0f,  0.0f, //7  86
+          -10.0f, 0.0f,  0.5f,        0.0f, 0.0f,   0.0f, -1.0f,  0.0f, //4  87
+    };
+    std::vector<unsigned int> indices =
+    {
+        /****  FLOOR  ****/
+        0, 1, 2,//front
+        2, 3, 0,
+
+        4, 7, 6,//back
+        6, 5, 4,
+
+        9, 8, 11,//top
+        11, 10, 9,
+
+        12, 13, 15,//bottom
+        15, 14, 12,
+
+        16, 18, 19,//left side
+        19, 17, 16,
+
+        20, 23, 22,//right side
+        22, 21, 20,
+
+
+        /****  FRONT WALL  ****/
+        24, 25, 26,//front
+        26, 27, 24,
+
+        28, 29, 30,//top
+        30, 31, 28,
+
+        32, 33, 34,//right side
+        34, 35, 32,
+
+        36, 37, 38,//left side
+        38, 39, 36,
+
+        40, 41, 42,//bottom
+        42, 43, 40,
+
+
+        /****  RIGHT WALL  ****/
+        44, 45, 46,//front
+        46, 47, 44,
+
+        48, 49, 50,//top
+        50, 51, 48,
+
+        52, 53, 54,//bottom
+        54, 55, 52,
+
+        /****  BACK WALL  ****/
+        56, 57, 58,//front
+        58, 59, 56,
+
+        60, 61, 62,//top
+        62, 63, 60,
+
+        64, 65, 66,//right side
+        66, 67, 64,
+
+        68, 69, 70,//left side
+        70, 71, 68,
+
+        72, 73, 74,//bottom
+        74, 75, 72,
+
+        /****  LEFT WALL  ****/
+        76, 77, 78,//front
+        78, 79, 76,
+
+        80, 81, 82,//top
+        82, 83, 80,
+
+        84, 85, 86,//bottom
+        86, 87, 84,
+    };
+    return Mesh(vertices, indices, texture);
+}
+Mesh InitFrontGlassPanel()
 {
-	delete pCamera;
+    //!! TEXTURE COORDS NOT CORRECT
+    std::vector<float> vertices =
+    {
+        /*****************  FRONT PANEL  ********************/
+        // Vertex coords         // tex coords    // Normals
+        -10.15f,  0.6f,  0.7f,       0.0f, 0.0f,   0.0f,  0.0f,  1.0f, //0  0 //front
+         10.15f,  0.6f,  0.7f,       1.0f, 0.0f,   0.0f,  0.0f,  1.0f, //1  1
+         10.15f,  5.0f,  0.7f,       1.0f, 1.0f,   0.0f,  0.0f,  1.0f, //2  2
+        -10.15f,  5.0f,  0.7f,       0.0f, 1.0f,   0.0f,  0.0f,  1.0f, //3  3
+
+        -10.15f,  5.0f,  0.7f,       0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //3  4 //top
+         10.15f,  5.0f,  0.7f,       1.0f, 0.0f,   0.0f,  1.0f,  0.0f, //2  5
+         10.15f,  5.0f,  0.6f,       1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //6  6
+        -10.15f,  5.0f,  0.6f,       0.0f, 1.0f,   0.0f,  1.0f,  0.0f, //5  7
+
+         10.15f,  0.6f,  0.7f,       1.0f, 0.0f,   1.0f,  0.0f,  0.0f, //1  8 //right side
+         10.15f,  0.6f,  0.6f,       1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //7  9
+         10.15f,  5.0f,  0.6f,       0.0f, 1.0f,   1.0f,  0.0f,  0.0f, //6  10
+         10.15f,  5.0f,  0.7f,       0.0f, 0.0f,   1.0f,  0.0f,  0.0f, //2  11
+
+        -10.15f,  0.6f,  0.6f,       1.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //4  12 //left side
+        -10.15f,  0.6f,  0.7f,       1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //0  13
+        -10.15f,  5.0f,  0.7f,       0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //3  14
+        -10.15f,  5.0f,  0.6f,       0.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //5  15
+
+        -10.15f,  0.6f,  0.6f,       0.0f, 0.0f,   0.0f,  0.0f, -1.0f, //4  16 //back
+         10.15f,  0.6f,  0.6f,       1.0f, 0.0f,   0.0f,  0.0f, -1.0f, //7  17
+         10.15f,  5.0f,  0.6f,       1.0f, 1.0f,   0.0f,  0.0f, -1.0f, //6  18
+        -10.15f,  5.0f,  0.6f,       0.0f, 1.0f,   0.0f,  0.0f, -1.0f, //5  19
+    };
+    std::vector<unsigned int> indices =
+    {
+        /****  FRONT PANEL  ****/
+        0, 1, 2,//front
+        2, 3, 0,
+
+        4, 5, 6,//top
+        6, 7, 4,
+
+        8, 9, 10,//right side
+        10, 11, 8,
+
+        12, 13, 14,//left side
+        14, 15, 12,
+
+        16, 17, 18,//back
+        18, 19, 16,
+    };
+    return Mesh(vertices, indices);
+}
+Mesh InitBackGlassPanel()
+{
+    std::vector<float> vertices = {
+        /*****************  BACK PANEL  ********************/
+         // Vertex coords         // tex coords    // Normals
+         10.15f,  0.6f, -7.7f,       0.0f, 0.0f,   0.0f,  0.0f, -1.0f, //0  0 //front
+        -10.15f,  0.6f, -7.7f,       1.0f, 0.0f,   0.0f,  0.0f, -1.0f, //1  1
+        -10.15f,  5.0f, -7.7f,       1.0f, 1.0f,   0.0f,  0.0f, -1.0f, //2  2
+         10.15f,  5.0f, -7.7f,       0.0f, 1.0f,   0.0f,  0.0f, -1.0f, //3  3
+
+         10.15f,  5.0f, -7.7f,       0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //3  4 //top
+        -10.15f,  5.0f, -7.7f,       1.0f, 0.0f,   0.0f,  1.0f,  0.0f, //2  5
+        -10.15f,  5.0f, -7.6f,       1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //6  6
+         10.15f,  5.0f, -7.6f,       0.0f, 1.0f,   0.0f,  1.0f,  0.0f, //5  7
+
+        -10.15f,  0.6f, -7.7f,       1.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //1  8 //right side
+        -10.15f,  0.6f, -7.6f,       1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //7  9
+        -10.15f,  5.0f, -7.6f,       0.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //6  10
+        -10.15f,  5.0f, -7.7f,       0.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //2  11
+
+         10.15f,  0.6f, -7.6f,       1.0f, 0.0f,   1.0f,  0.0f,  0.0f, //4  12 //left side
+         10.15f,  0.6f, -7.7f,       1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //0  13
+         10.15f,  5.0f, -7.7f,       0.0f, 1.0f,   1.0f,  0.0f,  0.0f, //3  14
+         10.15f,  5.0f, -7.6f,       0.0f, 0.0f,   1.0f,  0.0f,  0.0f, //5  15
+
+         10.15f,  0.6f, -7.6f,       0.0f, 0.0f,   0.0f,  0.0f,  1.0f, //4  16 //back
+        -10.15f,  0.6f, -7.6f,       1.0f, 0.0f,   0.0f,  0.0f,  1.0f, //7  17
+        -10.15f,  5.0f, -7.6f,       1.0f, 1.0f,   0.0f,  0.0f,  1.0f, //6  18
+         10.15f,  5.0f, -7.6f,       0.0f, 1.0f,   0.0f,  0.0f,  1.0f, //5  19
+    };
+    std::vector<unsigned int> indices = {
+        /****  BACK PANEL  ****/
+        0, 1, 2,//front
+        2, 3, 0,
+
+        4, 5, 6,//top
+        6, 7, 4,
+
+        8, 9, 10,//right side
+        10, 11, 8,
+
+        12, 13, 14,//left side
+        14, 15, 12,
+
+        16, 17, 18,//back
+        18, 19, 16,
+    };
+    return Mesh(vertices, indices);
+}
+Mesh InitRightGlassPanel()
+{
+    std::vector<float> vertices = {
+        /*****************  RIGHT PANEL  ********************/
+         // Vertex coords         // tex coords    // Normals
+         10.15f,  0.6f,  0.6f,       1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //0  0 //front
+         10.15f,  0.6f, -7.6f,       1.0f, 0.0f,   1.0f,  0.0f,  0.0f, //1  1
+         10.15f,  5.0f, -7.6f,       0.0f, 0.0f,   1.0f,  0.0f,  0.0f, //2  2
+         10.15f,  5.0f,  0.6f,       1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //3  3
+
+         10.05f,  0.6f,  0.6f,       1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //4  4 //back
+         10.05f,  0.6f, -7.6f,       1.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //7  5
+         10.05f,  5.0f, -7.6f,       0.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //6  6
+         10.05f,  5.0f,  0.6f,       1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //5  7
+
+         10.15f,  5.0f,  0.6f,       1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //3  8 //top
+         10.15f,  5.0f, -7.6f,       0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //2  9
+         10.05f,  5.0f, -7.6f,       0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //6  10
+         10.05f,  5.0f,  0.6f,       1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //5  11
+    };
+    std::vector<unsigned int> indices = {
+        /****  RIGHT PANEL  ****/
+        0, 1, 2,//front
+        2, 3, 0,
+
+        4, 5, 6,//back
+        6, 7, 4,
+
+        8, 9, 10,//top
+        10, 11, 8,
+    };
+    return Mesh(vertices, indices);
+}
+Mesh InitLeftGlassPanel()
+{
+    std::vector<float> vertices = {
+        /*****************  LEFT PANEL  ********************/
+         // Vertex coords         // tex coords    // Normals
+        -10.15f,  0.6f, -7.6f,       1.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //0  0//front
+        -10.15f,  0.6f,  0.6f,       1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //1  1
+        -10.15f,  5.0f,  0.6f,       1.0f, 1.0f,  -1.0f,  0.0f,  0.0f, //2  2
+        -10.15f,  5.0f, -7.6f,       0.0f, 0.0f,  -1.0f,  0.0f,  0.0f, //3  3
+
+        -10.05f,  0.6f, -7.6f,       1.0f, 0.0f,   1.0f,  0.0f,  0.0f, //4  4//back
+        -10.05f,  0.6f,  0.6f,       1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //7  5
+        -10.05f,  5.0f,  0.6f,       1.0f, 1.0f,   1.0f,  0.0f,  0.0f, //6  6
+        -10.05f,  5.0f, -7.6f,       0.0f, 0.0f,   1.0f,  0.0f,  0.0f, //5  7
+
+        -10.15f,  5.0f, -7.6f,       0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //3  8//top
+        -10.15f,  5.0f,  0.6f,       1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //2  9
+        -10.05f,  5.0f,  0.6f,       1.0f, 1.0f,   0.0f,  1.0f,  0.0f, //6  10
+        -10.05f,  5.0f, -7.6f,       0.0f, 0.0f,   0.0f,  1.0f,  0.0f, //5  11
+    };
+    std::vector<unsigned int> indices = {
+        /****  LEFT PANEL  ****/
+        0, 1, 2,//front
+        2, 3, 0,
+
+        4, 5, 6,//back
+        6, 7, 4,
+
+        8, 9, 10,//top
+        10, 11, 8,
+    };
+    return Mesh(vertices, indices);
+}
+Mesh InitLightCubeMesh()
+{
+    std::vector<float> vertices =
+    {
+        //      Vertex coords     //
+         -1.0f,  0.0f,  0.5f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//0
+          1.0f,  0.0f,  0.5f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//1  
+          1.0f,  1.0f,  0.5f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//2  
+         -1.0f,  1.0f,  0.5f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//3
+         -1.0f,  0.0f, -0.5f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//4
+         -1.0f,  1.0f, -0.5f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//5  
+          1.0f,  1.0f, -0.5f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//6  
+          1.0f,  0.0f, -0.5f,      0.0f, 0.0f,   0.0f,  0.0f,  0.0f,//7 
+    };
+
+    std::vector<unsigned int> indices =
+    {
+        0, 1, 2,//front
+        2, 3, 0,
+
+        4, 7, 6,//back
+        6, 5, 4,
+
+        3, 2, 6,//top
+        6, 5, 3,
+
+        0, 1, 7,//bottom
+        7, 4, 0,
+
+        0, 4, 5,//left side
+        5, 3, 0,
+
+        1, 7, 6,//right side
+        6, 2, 1
+    };
+
+    return Mesh(vertices, indices);
+}
+Mesh InitSurfaceWaterMesh()
+{
+    std::vector<float> vertices =
+    {
+        // Vertex coords          // tex coords   // Normals
+        -10.05f,  4.5f,  0.6f,    1.0f, 1.0f,     0.0f,  1.0f,  0.0f, //0  0
+         10.05f,  4.5f,  0.6f,    0.0f, 1.0f,     0.0f,  1.0f,  0.0f, //1  1
+         10.05f,  4.5f, -7.6f,    0.0f, 0.0f,     0.0f,  1.0f,  0.0f, //2  2
+        -10.05f,  4.5f, -7.6f,    1.0f, 0.0f,     0.0f,  1.0f,  0.0f, //3  3
+    };
+    std::vector<unsigned int> indices =
+    {
+        0, 1, 2,
+        2, 3, 0
+    };
+    return Mesh(vertices, indices);
+}
+Mesh InitSideWaterMesh()
+{
+    std::vector<float> vertices =
+    {
+        /*****************  FRONT  ********************/
+        // Vertex coords          // tex coords   // Normals
+        -10.05f,  0.6f,  0.599f,    0.0f, 0.0f,     0.0f,  0.0f,  1.0f, //0  0
+         10.05f,  0.6f,  0.599f,    1.0f, 0.0f,     0.0f,  0.0f,  1.0f, //1  1
+         10.05f,  4.5f,  0.599f,    1.0f, 1.0f,     0.0f,  0.0f,  1.0f, //2  2
+        -10.05f,  4.5f,  0.599f,    0.0f, 1.0f,     0.0f,  0.0f,  1.0f, //3  3
+
+        /*****************  RIGHT  ********************/
+         10.049f,  0.6f,  0.599f,    0.0f, 0.0f,     1.0f,  0.0f,  0.0f, //0  4
+         10.049f,  0.6f, -7.599f,    1.0f, 0.0f,     1.0f,  0.0f,  0.0f, //1  5
+         10.049f,  4.5f, -7.599f,    1.0f, 1.0f,     1.0f,  0.0f,  0.0f, //2  6
+         10.049f,  4.5f,  0.599f,    0.0f, 1.0f,     1.0f,  0.0f,  0.0f, //3  7
+
+         /*****************  BACK  ********************/
+         10.05f,  0.6f, -7.599f,    0.0f, 0.0f,     0.0f,  0.0f, -1.0f, //0  8
+        -10.05f,  0.6f, -7.599f,    1.0f, 0.0f,     0.0f,  0.0f, -1.0f, //1  9
+        -10.05f,  4.5f, -7.599f,    1.0f, 1.0f,     0.0f,  0.0f, -1.0f, //2  10
+         10.05f,  4.5f, -7.599f,    0.0f, 1.0f,     0.0f,  0.0f, -1.0f, //3  11
+
+         /*****************  LEFT  ********************/
+        -10.049f,  0.6f, -7.599f,    0.0f, 0.0f,    -1.0f,  0.0f, 0.0f, //0  12
+        -10.049f,  0.6f,  0.599f,    1.0f, 0.0f,    -1.0f,  0.0f, 0.0f, //1  13
+        -10.049f,  4.5f,  0.599f,    1.0f, 1.0f,    -1.0f,  0.0f, 0.0f, //2  14
+        -10.049f,  4.5f, -7.599f,    0.0f, 1.0f,    -1.0f,  0.0f, 0.0f, //3  15
+    };
+    std::vector<unsigned int> indices =
+    {
+        0, 1, 2,
+        2, 3, 0,
+
+        4, 5, 6,
+        6, 7, 4,
+
+        8, 9, 10,
+        10, 11, 8,
+
+        12, 13, 14,
+        14, 15, 12
+    };
+    return Mesh(vertices, indices);
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window);
-
-// timing
-double deltaTime = 0.0f;	// time between current frame and last frame
-double lastFrame = 0.0f;
-float g_fKa = 0.5;
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+int main()
 {
-	if (key == GLFW_KEY_A && action == GLFW_PRESS && g_fKa < 1.0)
-	{
-		g_fKa += 0.1;
-	}
-	if (key == GLFW_KEY_Z && action == GLFW_PRESS && g_fKa > 0.2)
-	{
-		g_fKa -= 0.1;
-	}
-}
+    /* Initializing the library */
+    if (!glfwInit())
+        return -1;
 
-int main(int argc, char** argv)
-{
-	std::string strFullExeFileName = argv[0];
-	std::string strExePath;
-	const size_t last_slash_idx = strFullExeFileName.rfind('\\');
-	if (std::string::npos != last_slash_idx) {
-		strExePath = strFullExeFileName.substr(0, last_slash_idx);
-	}
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// glfw: initialize and configure
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    /* Creating a window */
+    int window_height = 800, window_width = 1850;
+    GLFWwindow* window = glfwCreateWindow(window_width, window_height, "Aquarium", NULL, NULL);
+    if (!window)
+    {
+        std::cout << "Failed to create window!\n";
+        glfwTerminate();
+        return -1;
+    }
+    glfwMakeContextCurrent(window);
 
-	// glfw window creation
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Lab 7", NULL, NULL);
-	if (window == NULL) {
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return -1;
-	}
+    /* initiaziting glew and reading the shader */
+    glewInit();
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-	glfwSetCursorPosCallback(window, mouse_callback);
-	glfwSetScrollCallback(window, scroll_callback);
-	glfwSetKeyCallback(window, key_callback);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	// tell GLFW to capture our mouse
+    //loading shaders
+    Shader object_shader("resources\\shaders\\object.shader");//loading object shader, used for all objects
+    object_shader.Bind();
+    object_shader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
+
+    Shader light_shader("resources\\shaders\\lightSource.shader");//loading light shader, used for light sources 
+    light_shader.Bind();
+    light_shader.SetUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
+
+    Shader glass_shader("resources\\shaders\\glass.shader");
+    glass_shader.Bind();
+    glass_shader.SetUniform4f("u_Color", 1.0f, 1.0f, 1.0f, 1.0f);
+    glass_shader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
+
+    Shader water_shader("resources\\shaders\\water.shader");
+    water_shader.Bind();
+    water_shader.SetUniform4f("u_LightColor", 1.0f, 1.0f, 1.0f, 1.0f);
+
+    Shader shadow_shader("resources\\shaders\\shadowMap.shader");
+    Shader shadowViewer_shader("resources\\shaders\\depthViewer.shader");
+
+    // loading texture
+    Texture sand_texture("resources\\textures\\sand.jpg");
+    Texture wood_texture("resources\\textures\\wood.jpg");
+    Texture basic_fish_texture("resources\\textures\\fish_texture.png");
+    Texture fancy_fish_texture("resources\\textures\\fancy_fish_texture.jpg");
+    Texture blue_fish_texture("resources\\textures\\blue_fish_texture.jpg");
+    Texture green_orange_fish_texture("resources\\textures\\green_orange_fish_texture.jpg");
+    Texture orange_fish_texture("resources\\textures\\orange_fish_texture.jpg");
+    Texture water_DuDv("resources\\textures\\waterDUDV.png");
+    Texture water_NormalMap("resources\\textures\\waterNormalMap.png");
+    Texture rock_texture("resources\\textures\\rock_texture.jpg");
+    Texture star_texture("resources\\textures\\star_texture.jpg");
+    Texture coral_texture("resources\\textures\\coral_red_texture.jpg");
+    Texture coral2_texture("resources\\textures\\coral2_texture.jpg");
+    Texture plant1_texture("resources\\textures\\plant1_texture.jpg");
+
+    // Initialize camera
+    Camera camera(window_width, window_height, glm::vec3(0.0f, 15.0f, 30.0f));
+    camera.SetPitch(-25.0f);
+    float last_frame = 0.0f, delta_time;
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+    glfwSetCursorPos(window, (window_width / 2), (window_height / 2));
+
+    Renderer renderer;
+
+    glEnable(GL_CLIP_DISTANCE0);
+    glEnable(GL_DEPTH_TEST);
+    glClearColor(0.0f, 0.2f, 0.3f, 1.0f);
+
+    //SKYBOX
+    Skybox scene_skybox;
+
+    //loading meshes
+    Mesh sand = InitSandMesh(sand_texture);
+    Mesh aquarium_base = InitAquariumBaseMesh(wood_texture);
+    std::array<Mesh, 4> glass_panels = { InitFrontGlassPanel(), InitBackGlassPanel(), InitRightGlassPanel(), InitLeftGlassPanel() };
+    Mesh light_cube = InitLightCubeMesh();
+
+    Mesh surface_water = InitSurfaceWaterMesh();
+    Mesh side_water = InitSideWaterMesh();
 
 
-	glewInit();
+    WaterFrameBuffer FBO(window_width, window_height);
+    Texture reflection(FBO.GetReflectionTextureID());
+    Texture refraction(FBO.GetRefractionTextureID());
+    Texture depth_map(FBO.GetRefractionDepthTextureID());
 
-	glEnable(GL_DEPTH_TEST);
+    ShadowFrameBuffer Shadow_FBO(window_width, window_height);
+    Texture shadow_depth_map(Shadow_FBO.GetShadowDepthTextureID());
+
+    //general operations for models
+    glm::vec3 aquarium_translation = glm::vec3(0.0f, 0.0f, 3.5f);//setting default translation for the whole aquarium
+    glm::vec3 aquarium_scaling = glm::vec3(2.0f, 2.0f, 2.0f);
+    float water_height = 4.5f * aquarium_scaling.y, wave_move_factor = 0.0f;
+    surface_water.SetTexture(reflection);
 
 
-	pCamera = new Camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0, 0.0, 3.0));
 
-	//initializations
-	Model aquarium(strExePath + "\\12987_Saltwater_Aquarium_v1_l1.obj");
+    while (!glfwWindowShouldClose(window))
+    {
+        //getting delta time
+        float current_frame = static_cast<float>(glfwGetTime());
+        delta_time = current_frame - last_frame;
+        last_frame = current_frame;
 
-	Shader lampShader("Lamp.vs", "Lamp.fs");
+        //calculating new frame positions
+        //glm::vec3 light_position = glm::vec3(-20.0f, glm::sin(current_frame) * 40.0f, glm::cos(current_frame) * 40.0f);
+        glm::vec3 light_position = glm::vec3(-20.0f, 60.0f, 40.0f);
 
-	// render loop
-	while (!glfwWindowShouldClose(window)) {
-		// per-frame time logic
-		double currentFrame = glfwGetTime();
-		deltaTime = currentFrame - lastFrame;
-		lastFrame = currentFrame;
 
-		// input
-		processInput(window);
 
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // Get light's perspective
+        // --------------------------------------------------------------
+        glm::mat4 lightProjection, lightView;
+        glm::mat4 lightSpaceMatrix;
+        float near_plane = 60.1f, far_plane = 90.5f;
+        lightProjection = glm::ortho(-90.0f, 90.0f, -90.0f, 90.0f, near_plane, far_plane);
+        //lightProjection = glm::perspective(glm::radians(90.0f), (GLfloat)4000 / (GLfloat)4000, near_plane, far_plane);
+        lightView = glm::lookAt(light_position, glm::vec3(0.0f, 0.0f, 4.0f), glm::vec3(0.0, 1.0, 0.0));
+        lightSpaceMatrix = lightProjection * lightView;
 
-		lampShader.use();
-		lampShader.setMat4("model", glm::mat4(1));
-		lampShader.setMat4("view", pCamera->GetViewMatrix()); 
-		lampShader.setMat4("projection", pCamera->GetProjectionMatrix());
+        //configuring general settings for shaders
+        glass_shader.Bind();
+        glass_shader.SetUniform3f("u_LightPosition", light_position.x, light_position.y, light_position.z);
 
-		aquarium.Draw(lampShader);
-		
-		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
+        object_shader.Bind();
+        object_shader.SetUniform3f("u_LightPosition", light_position.x, light_position.y, light_position.z);
+        object_shader.SetUniformMat4f("u_LightProjection", lightSpaceMatrix);
 
-	Cleanup();
+        water_shader.Bind();
+        water_shader.SetUniform3f("u_LightPosition", light_position.x, light_position.y, light_position.z);
+        water_shader.SetUniform1f("u_ZNear", camera.GetNear());
+        water_shader.SetUniform1f("u_ZFar", camera.GetFar());
 
-	// glfw: terminate, clearing all previously allocated GLFW resources
-	glfwTerminate();
-	return 0;
-}
+        shadow_shader.Bind();
+        shadow_shader.SetUniformMat4f("u_LightProjection", lightSpaceMatrix);
 
-// process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
-void processInput(GLFWwindow* window)
-{
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
+        //processing user input
+        camera.ProcessInput(window, delta_time);
 
-	if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(FORWARD, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(BACKWARD, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(LEFT, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(RIGHT, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_PAGE_UP) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(UP, (float)deltaTime);
-	if (glfwGetKey(window, GLFW_KEY_PAGE_DOWN) == GLFW_PRESS)
-		pCamera->ProcessKeyboard(DOWN, (float)deltaTime);
+        Shadow_FBO.BindFrameBuffer();
+        {
+            renderer.Clear();
+            glass_shader.Bind();
+            glass_shader.SetUniform4f("u_ClipPlane", 0.0f, -1.0f, 0.0f, 100.0f);
+            object_shader.Bind();
+            object_shader.SetUniform4f("u_ClipPlane", 0.0f, -1.0f, 0.0f, 100.0f);
 
-	if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-		int width, height;
-		glfwGetWindowSize(window, &width, &height);
-		pCamera->Reset(width, height);
+            // render skybox
+            scene_skybox.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 
-	}
-}
+            //rendering the sand
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));
+                model = glm::translate(model, aquarium_translation);
+                shadow_shader.Bind();
+                shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+                sand.Draw(camera, shadow_shader, renderer);
+            }
+            //rendering aquarium base
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, aquarium_translation);
+                shadow_shader.Bind();
+                shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+                aquarium_base.Draw(camera, shadow_shader, renderer);
+            }
+        }
+        Shadow_FBO.UnbindFrameBuffer();
 
-// glfw: whenever the window size changed (by OS or user resize) this callback function executes
-// ---------------------------------------------------------------------------------------------
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	// make sure the viewport matches the new window dimensions; note that width and 
-	// height will be significantly larger than specified on retina displays.
-	pCamera->Reshape(width, height);
-}
+        //rendering for reflection texture
+        FBO.BindReflectionFrameBuffer();
+        {
+            //the reflection needs an inverted image from above the water, so we move the camera before rendering
+            float camera_moving_distance = 2 * (camera.GetPosition().y - water_height);
+            camera.SetPosition(glm::vec3(camera.GetPosition().x, camera.GetPosition().y - camera_moving_distance, camera.GetPosition().z));
+            camera.SetPitch(-camera.GetPitch());
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
-	pCamera->MouseControl((float)xpos, (float)ypos);
-}
+            renderer.Clear();
+            glass_shader.Bind();
+            glass_shader.SetUniform4f("u_ClipPlane", 0.0f, 1.0f, 0.0f, -water_height);
+            object_shader.Bind();
+            object_shader.SetUniform4f("u_ClipPlane", 0.0f, 1.0f, 0.0f, -water_height);
 
-void scroll_callback(GLFWwindow* window, double xoffset, double yOffset)
-{
-	pCamera->ProcessMouseScroll((float)yOffset);
+            // render skybox
+            scene_skybox.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+
+            //rendering the sand
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));
+                model = glm::translate(model, aquarium_translation);
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                sand.Draw(camera, object_shader, renderer);
+            }
+            //rendering aquarium base
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, aquarium_translation);
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                aquarium_base.Draw(camera, object_shader, renderer);
+            }
+
+
+            //rendering light cube
+            {
+                glDisable(GL_CLIP_DISTANCE0);//the light cube should not be affected by the clipping
+
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, light_position);
+                light_shader.Bind();
+                light_shader.SetUniformMat4f("u_ModelMatrix", model);
+                //light_cube.Draw(camera, light_shader, renderer);
+
+                glEnable(GL_CLIP_DISTANCE0);
+            }
+
+            //rendering aquarium glass
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, aquarium_translation);
+                glass_shader.Bind();
+                glass_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+                //needed for good transparency, the positions will represent the centers of the panels
+                std::array<glm::vec3, 6> glass_panels_positions =
+                {
+                    //front panel left                //front panel right
+                    glm::vec3(-7.0f,  2.8f,  0.65f), glm::vec3(7.0f,  2.8f,  0.65f),//front panel
+                    //back panel left                 //back panel right
+                    glm::vec3(-7.0f,  2.8f, -7.65f), glm::vec3(7.0f,  2.8f, -7.65f),//back panel
+                    glm::vec3(10.1f,  2.8f, -4.1f),//right panel
+                    glm::vec3(-10.1f,  2.8f, -4.1f) //left panel
+                };
+
+                for (unsigned int panel_index = 0; panel_index < glass_panels_positions.size(); panel_index++)
+                    glass_panels_positions[panel_index] += aquarium_translation;
+                //determine draw order based on panel distance from camera
+                std::array<std::pair<float, unsigned int>, 6> panels_distances_from_camera = //pair< distance from camera, panel index >
+                {
+                    std::make_pair(0.0f, 0), std::make_pair(0.0f, 0),
+                    std::make_pair(0.0f, 1), std::make_pair(0.0f, 1),
+                    std::make_pair(0.0f, 2),
+                    std::make_pair(0.0f, 3)
+                };
+
+                std::array < std::pair<float, unsigned int>, 4> draw_order =
+                {
+                    std::make_pair(-1.0f, 0),
+                    std::make_pair(-1.0f, 1),
+                    std::make_pair(-1.0f, 2),
+                    std::make_pair(-1.0f, 3)
+                };
+                //calculate distances
+                for (unsigned int panel_index = 0; panel_index < panels_distances_from_camera.size(); panel_index++)
+                {
+                    panels_distances_from_camera[panel_index].first = glm::length(camera.GetPosition() - glass_panels_positions[panel_index]);
+
+                    if (panels_distances_from_camera[panel_index].first < draw_order[panels_distances_from_camera[panel_index].second].first
+                        || draw_order[panels_distances_from_camera[panel_index].second].first == -1.0f)
+                        draw_order[panels_distances_from_camera[panel_index].second].first = panels_distances_from_camera[panel_index].first;
+                }
+
+                //sort the panels from furthest to closest
+                std::sort(draw_order.begin(), draw_order.end(), [](const std::pair<float, unsigned int>& element1,
+                    const std::pair<float, unsigned int>& element2) -> bool { return element1.first > element2.first; });
+
+                for (unsigned int panel_index = 0; panel_index < glass_panels.size(); panel_index++)
+                    glass_panels[draw_order[panel_index].second].Draw(camera, glass_shader, renderer);
+            }
+
+            //we move the camera back to the original position
+            camera.SetPosition(glm::vec3(camera.GetPosition().x, camera.GetPosition().y + camera_moving_distance, camera.GetPosition().z));
+            camera.SetPitch(-camera.GetPitch());
+        }
+        FBO.UnbindFrameBuffer();
+
+        //rendering for refraction texture
+        FBO.BindRefractionFrameBuffer();
+        {
+            renderer.Clear();
+            glass_shader.Bind();
+            glass_shader.SetUniform4f("u_ClipPlane", 0.0f, -1.0f, 0.0f, water_height);
+            object_shader.Bind();
+            object_shader.SetUniform4f("u_ClipPlane", 0.0f, -1.0f, 0.0f, water_height);
+
+            // render skybox
+            scene_skybox.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+
+            //rendering the sand
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));
+                model = glm::translate(model, aquarium_translation);
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                sand.Draw(camera, object_shader, renderer);
+            }
+            //rendering aquarium base
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, aquarium_translation);
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                aquarium_base.Draw(camera, object_shader, renderer);
+            }
+
+
+        }
+        FBO.UnbindFrameBuffer();
+
+        //render to screen
+        {
+            renderer.Clear();
+            glass_shader.Bind();
+            glass_shader.SetUniform4f("u_ClipPlane", 0.0f, -1.0f, 0.0f, 100.0f);
+            object_shader.Bind();
+            object_shader.SetUniform4f("u_ClipPlane", 0.0f, -1.0f, 0.0f, 100.0f);
+
+            // render skybox
+            scene_skybox.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+
+            //rendering the sand
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, glm::vec3(0.0f, 0.1f, 0.0f));
+                model = glm::translate(model, aquarium_translation);
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                sand.Draw(camera, object_shader, renderer);
+            }
+
+            //rendering aquarium base
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, aquarium_translation);
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                aquarium_base.Draw(camera, object_shader, renderer);
+            }
+
+
+            //rendering light cube
+            {
+                glDisable(GL_CLIP_DISTANCE0);//the light cube should not be affected by the clipping
+
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, light_position);
+                light_shader.Bind();
+                light_shader.SetUniformMat4f("u_ModelMatrix", model);
+                //light_cube.Draw(camera, light_shader, renderer);
+
+                glEnable(GL_CLIP_DISTANCE0);
+            }
+
+            //rendering water
+            {
+                wave_move_factor += 0.05f * delta_time;
+                if (wave_move_factor > 1)
+                    wave_move_factor = 0.0f;
+
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, aquarium_translation);
+                water_shader.Bind();
+                water_shader.SetUniformMat4f("u_ModelMatrix", model);
+                water_shader.SetUniform1f("u_WaveMoveFactor", wave_move_factor);
+                refraction.Bind(1);
+                water_DuDv.Bind(2);
+                water_NormalMap.Bind(3);
+                depth_map.Bind(4);
+                water_shader.SetUniform1i("u_ReflectionTexture", 0);
+                water_shader.SetUniform1i("u_RefractionTexture", 1);
+                water_shader.SetUniform1i("u_DuDvMap", 2);
+                water_shader.SetUniform1i("u_NormalMap", 3);
+                water_shader.SetUniform1i("u_DepthMap", 4);
+
+                water_shader.SetUniform1i("u_isSurface", 1);
+                surface_water.Draw(camera, water_shader, renderer);
+
+                model = glm::mediump_mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, aquarium_translation);
+                water_shader.Bind();
+                water_shader.SetUniformMat4f("u_ModelMatrix", model);
+                water_shader.SetUniform1i("u_isSurface", 0);
+                side_water.Draw(camera, water_shader, renderer);
+            }
+
+            //rendering aquarium glass
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::scale(model, aquarium_scaling);
+                model = glm::translate(model, aquarium_translation);
+                glass_shader.Bind();
+                glass_shader.SetUniformMat4f("u_ModelMatrix", model);
+
+                //needed for good transparency, the positions will represent the centers of the panels
+                std::array<glm::vec3, 6> glass_panels_positions =
+                {
+                    //front panel left                //front panel right
+                    glm::vec3(-7.0f,  2.8f,  0.65f), glm::vec3(7.0f,  2.8f,  0.65f),//front panel
+                    //back panel left                 //back panel right
+                    glm::vec3(-7.0f,  2.8f, -7.65f), glm::vec3(7.0f,  2.8f, -7.65f),//back panel
+                    glm::vec3(10.1f,  2.8f, -4.1f),//right panel
+                    glm::vec3(-10.1f,  2.8f, -4.1f) //left panel
+                };
+
+                for (unsigned int panel_index = 0; panel_index < glass_panels_positions.size(); panel_index++)
+                    glass_panels_positions[panel_index] += aquarium_translation;
+                //determine draw order based on panel distance from camera
+                std::array<std::pair<float, unsigned int>, 6> panels_distances_from_camera = //pair< distance from camera, panel index >
+                {
+                    std::make_pair(0.0f, 0), std::make_pair(0.0f, 0),
+                    std::make_pair(0.0f, 1), std::make_pair(0.0f, 1),
+                    std::make_pair(0.0f, 2),
+                    std::make_pair(0.0f, 3)
+                };
+
+                std::array < std::pair<float, unsigned int>, 4> draw_order =
+                {
+                    std::make_pair(-1.0f, 0),
+                    std::make_pair(-1.0f, 1),
+                    std::make_pair(-1.0f, 2),
+                    std::make_pair(-1.0f, 3)
+                };
+                //calculate distances
+                for (unsigned int panel_index = 0; panel_index < panels_distances_from_camera.size(); panel_index++)
+                {
+                    panels_distances_from_camera[panel_index].first = glm::length(camera.GetPosition() - glass_panels_positions[panel_index]);
+
+                    if (panels_distances_from_camera[panel_index].first < draw_order[panels_distances_from_camera[panel_index].second].first
+                        || draw_order[panels_distances_from_camera[panel_index].second].first == -1.0f)
+                        draw_order[panels_distances_from_camera[panel_index].second].first = panels_distances_from_camera[panel_index].first;
+                }
+
+                //sort the panels from furthest to closest
+                std::sort(draw_order.begin(), draw_order.end(), [](const std::pair<float, unsigned int>& element1,
+                    const std::pair<float, unsigned int>& element2) -> bool { return element1.first > element2.first; });
+
+                for (unsigned int panel_index = 0; panel_index < glass_panels.size(); panel_index++)
+                    glass_panels[draw_order[panel_index].second].Draw(camera, glass_shader, renderer);
+            }
+        }
+
+
+        // Swap front and back buffers 
+        glfwSwapBuffers(window);
+
+        // Poll for and process events
+        glfwPollEvents();
+    }
+
+    glfwTerminate();
+    return 0;
 }

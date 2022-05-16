@@ -1,6 +1,6 @@
 #include "Skybox.h"
 
-Skybox::Skybox() : skybox_shader{ "res\\shaders\\skybox.shader" }
+Skybox::Skybox() : skybox_shader{ "resources\\shaders\\skybox.shader" }
 {
     
     GLfloat skyboxVertices[108] =
@@ -59,12 +59,12 @@ Skybox::Skybox() : skybox_shader{ "res\\shaders\\skybox.shader" }
 
     std::vector<std::string> faces
     {
-        "res\\textures\\skybox\\left.JPG",
-        "res\\textures\\skybox\\right.JPG",
-        "res\\textures\\skybox\\top.JPG",
-        "res\\textures\\skybox\\bottom.JPG",
-        "res\\textures\\skybox\\front.JPG",
-        "res\\textures\\skybox\\back.JPG"
+        "resources\\textures\\skybox\\left.jpg",
+        "resources\\textures\\skybox\\right.jpg",
+        "resources\\textures\\skybox\\top.jpg",
+        "resources\\textures\\skybox\\bottom.jpg",
+        "resources\\textures\\skybox\\front.jpg",
+        "resources\\textures\\skybox\\back.jpg"
     };
 
     cubemapTexture = loadCubemap(faces);
