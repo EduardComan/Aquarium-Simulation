@@ -591,8 +591,89 @@ Mesh InitSideWaterMesh()
     };
     return Mesh(vertices, indices);
 }
+Mesh InitBasicFish(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("res\\models\\fish.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
 
+    return Mesh(vertices, indices, texture);
+}
+enum class FishType
+{
+    BASIC,
+    FANCY,
+    BLUE,
+    GREEN_ORANGE,
+    ORANGE
+};
 
+struct FishCharacteristics
+{
+    FishType m_type;
+
+    glm::vec3 position;
+    glm::vec3 next_position;
+
+    float scaling_factor;
+    float speed;
+    float trajectory_position;
+
+    float x_path_distance;
+    float height;
+    float z_path_distance;
+
+    FishCharacteristics(float scaling_factor, float speed, float x_path_distance,
+        float height, float z_path_distance, float trajectory_position, FishType type)
+        : scaling_factor(scaling_factor), speed(speed), x_path_distance(x_path_distance),
+        height(height), z_path_distance(z_path_distance), trajectory_position(trajectory_position), m_type(type)
+    {
+        position = glm::vec3(0.0f);
+        next_position = glm::vec3(0.0f);
+    }
+
+};
+
+void CreateFishes(std::vector<FishCharacteristics>& fishes)
+{
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 14.0f, 4.8f, 5.6f, -0.1f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 14.4f, 5.0f, 6.0f, -0.1f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 13.5f, 4.8f, 5.6f, 0.0f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 14.0f, 4.5f, 6.0f, 0.0f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 14.3f, 4.7f, 6.3f, 0.0f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 13.2f, 5.4f, 5.5f, 0.1f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 14.0f, 5.3f, 6.0f, 0.1f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 14.4f, 5.5f, 6.5f, 0.1f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 12.8f, 5.3f, 5.3f, 0.06f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 12.9f, 4.9f, 5.4f, 0.04f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 13.4f, 5.7f, 6.6f, -0.06f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 14.0f, 5.4f, 6.0f, -0.1f, FishType::BASIC));
+
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -15.0f, 3.3f, 5.6f, 0.9f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -15.4f, 3.5f, 6.0f, 0.9f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -14.5f, 3.3f, 5.6f, 1.0f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -15.0f, 3.0f, 6.0f, 1.0f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -15.3f, 3.2f, 6.3f, 1.0f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -14.2f, 3.9f, 5.5f, 1.1f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -15.0f, 3.8f, 6.0f, 1.1f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -15.4f, 4.0f, 6.5f, 1.1f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -13.8f, 3.8f, 5.3f, 1.06f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -13.9f, 3.4f, 5.4f, 1.04f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -14.4f, 4.2f, 6.6f, 0.94f, FishType::BASIC));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, -15.0f, 3.9f, 6.0f, 0.9f, FishType::BASIC));
+
+    fishes.emplace_back(FishCharacteristics(1.0f, 0.001f, -10.0f, 2.0f, 4.0f, 0.0f, FishType::FANCY));
+    fishes.emplace_back(FishCharacteristics(1.0f, 0.001f, -10.0f, 2.0f, 4.0f, 2.0f, FishType::FANCY));
+    fishes.emplace_back(FishCharacteristics(1.0f, 0.002f, 10.0f, 5.0f, 3.0f, -0.5f, FishType::BLUE));
+    fishes.emplace_back(FishCharacteristics(0.5f, 0.002f, 16.0f, 7.0f, 6.5f, 1.0f, FishType::GREEN_ORANGE));
+    fishes.emplace_back(FishCharacteristics(0.55f, 0.002f, -15.6f, 6.5f, 5.7f, 1.0f, FishType::FANCY));
+    fishes.emplace_back(FishCharacteristics(0.4f, 0.0045f, 12.0f, 4.7f, -3.0f, 0.0f, FishType::ORANGE));
+    fishes.emplace_back(FishCharacteristics(1.2f, 0.002f, -7.0f, 2.0f, 3.0f, 2.0f, FishType::BLUE));
+    fishes.emplace_back(FishCharacteristics(0.3f, 0.0035f, 15.0f, 7.5f, 6.0f, 0.0f, FishType::GREEN_ORANGE));
+    fishes.emplace_back(FishCharacteristics(0.35f, 0.0035f, 11.0f, 5.0f, -5.6f, 2.0f, FishType::ORANGE));
+    fishes.emplace_back(FishCharacteristics(0.42f, 0.004f, 15.0f, 2.0f, 4.0f, 1.0f, FishType::ORANGE));
+}
 
 int main()
 {
@@ -678,6 +759,7 @@ int main()
     Mesh sand = InitSandMesh(sand_texture);
     Mesh aquarium_base = InitAquariumBaseMesh(wood_texture);
     std::array<Mesh, 4> glass_panels = { InitFrontGlassPanel(), InitBackGlassPanel(), InitRightGlassPanel(), InitLeftGlassPanel() };
+    Mesh basic_fish = InitBasicFish(basic_fish_texture);
     Mesh light_cube = InitLightCubeMesh();
     Mesh surface_water = InitSurfaceWaterMesh();
     Mesh side_water = InitSideWaterMesh();
@@ -702,7 +784,8 @@ int main()
     float water_height = 4.5f * aquarium_scaling.y, wave_move_factor = 0.0f;
     surface_water.SetTexture(reflection);
 
-
+    std::vector<FishCharacteristics> fishes_charact;
+    CreateFishes(fishes_charact);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -715,7 +798,17 @@ int main()
         //glm::vec3 light_position = glm::vec3(-20.0f, glm::sin(current_frame) * 40.0f, glm::cos(current_frame) * 40.0f);
         glm::vec3 light_position = glm::vec3(-20.0f, 60.0f, 40.0f);
 
+        for (auto& fish_charact : fishes_charact)
+        {
+            if (fish_charact.trajectory_position + fish_charact.speed > 360.0f)
+                fish_charact.trajectory_position = 0.0f;
+            else
+                fish_charact.trajectory_position += fish_charact.speed;
 
+            fish_charact.next_position = glm::vec3(glm::sin(fish_charact.trajectory_position) * fish_charact.x_path_distance,
+                fish_charact.height,
+                glm::cos(fish_charact.trajectory_position) * fish_charact.z_path_distance);
+        }
 
         // Get light's perspective
         // --------------------------------------------------------------
@@ -775,6 +868,41 @@ int main()
                 shadow_shader.Bind();
                 shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
                 aquarium_base.Draw(camera, shadow_shader, renderer);
+            }
+            {
+                for (auto& fish_charact : fishes_charact)
+                {
+                    float delta_x = fish_charact.next_position.x - fish_charact.position.x;
+                    float delta_z = fish_charact.next_position.z - fish_charact.position.z;
+                    float angle = atan2(delta_x, delta_z);
+
+                    glm::mat4 model = glm::mat4(1.0f);
+                    model = glm::translate(model, fish_charact.position);
+                    model = glm::scale(model, glm::vec3(fish_charact.scaling_factor, fish_charact.scaling_factor,
+                        fish_charact.scaling_factor));
+                    model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+                    shadow_shader.Bind();
+                    shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+                    switch (fish_charact.m_type)
+                    {
+                    case FishType::BASIC:
+                        basic_fish.Draw(camera, shadow_shader, renderer);
+                        break;
+                   /* case FishType::FANCY:
+                        fancy_fish.Draw(camera, shadow_shader, renderer);
+                        break;
+                    case FishType::BLUE:
+                        blue_fish.Draw(camera, shadow_shader, renderer);
+                        break;
+                    case FishType::GREEN_ORANGE:
+                        green_orange_fish.Draw(camera, shadow_shader, renderer);
+                        break;
+                    case FishType::ORANGE:
+                        orange_fish.Draw(camera, shadow_shader, renderer);
+                        break;*/
+                    }
+                }
             }
             //rendering rock 1
             {  glm::mat4 model = glm::mat4(1.0f);
@@ -1135,6 +1263,45 @@ int main()
                 object_shader.SetUniformMat4f("u_ModelMatrix", model);
                 object_shader.SetUniform1i("shadowMap", 1);
                 aquarium_base.Draw(camera, object_shader, renderer);
+            }
+
+            {
+                for (auto& fish_charact : fishes_charact)
+                {
+                    float delta_x = fish_charact.next_position.x - fish_charact.position.x;
+                    float delta_z = fish_charact.next_position.z - fish_charact.position.z;
+                    float angle = atan2(delta_x, delta_z);
+
+                    glm::mat4 model = glm::mat4(1.0f);
+                    model = glm::translate(model, fish_charact.position);
+                    model = glm::scale(model, glm::vec3(fish_charact.scaling_factor, fish_charact.scaling_factor,
+                        fish_charact.scaling_factor));
+                    model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+                    shadow_depth_map.Bind(1);
+                    object_shader.Bind();
+                    object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                    object_shader.SetUniform1i("shadowMap", 1);
+
+                    switch (fish_charact.m_type)
+                    {
+                    case FishType::BASIC:
+                        basic_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    /*case FishType::FANCY:
+                        fancy_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    case FishType::BLUE:
+                        blue_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    case FishType::GREEN_ORANGE:
+                        green_orange_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    case FishType::ORANGE:
+                        orange_fish.Draw(camera, object_shader, renderer);
+                        break;*/
+                    }
+                }
             }
 
             //rendering rock 1
@@ -1595,7 +1762,43 @@ int main()
                 object_shader.SetUniform1i("shadowMap", 1);
                 aquarium_base.Draw(camera, object_shader, renderer);
             }
+            {
+                for (auto& fish_charact : fishes_charact)
+                {
+                    float delta_x = fish_charact.next_position.x - fish_charact.position.x;
+                    float delta_z = fish_charact.next_position.z - fish_charact.position.z;
+                    float angle = atan2(delta_x, delta_z);
 
+                    glm::mat4 model = glm::mat4(1.0f);
+                    model = glm::translate(model, fish_charact.position);
+                    model = glm::scale(model, glm::vec3(fish_charact.scaling_factor, fish_charact.scaling_factor,
+                        fish_charact.scaling_factor));
+                    model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+                    shadow_depth_map.Bind(1);
+                    object_shader.Bind();
+                    object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                    object_shader.SetUniform1i("shadowMap", 1);
+
+                    switch (fish_charact.m_type)
+                    {
+                    case FishType::BASIC:
+                        basic_fish.Draw(camera, object_shader, renderer);
+                        break;
+                   /* case FishType::FANCY:
+                        fancy_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    case FishType::BLUE:
+                        blue_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    case FishType::GREEN_ORANGE:
+                        green_orange_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    case FishType::ORANGE:
+                        orange_fish.Draw(camera, object_shader, renderer);
+                        break;*/
+                    }
+                }
+            }
             //rendering rock 1
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
@@ -1973,6 +2176,44 @@ int main()
                 object_shader.SetUniformMat4f("u_ModelMatrix", model);
                 object_shader.SetUniform1i("shadowMap", 1);
                 aquarium_base.Draw(camera, object_shader, renderer);
+            }
+
+            {
+                for (auto& fish_charact : fishes_charact)
+                {
+                    float delta_x = fish_charact.next_position.x - fish_charact.position.x;
+                    float delta_z = fish_charact.next_position.z - fish_charact.position.z;
+                    float angle = atan2(delta_x, delta_z);
+
+                    glm::mat4 model = glm::mat4(1.0f);
+                    model = glm::translate(model, fish_charact.position);
+                    model = glm::scale(model, glm::vec3(fish_charact.scaling_factor, fish_charact.scaling_factor,
+                        fish_charact.scaling_factor));
+                    model = glm::rotate(model, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+                    shadow_depth_map.Bind(1);
+                    object_shader.Bind();
+                    object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                    object_shader.SetUniform1i("shadowMap", 1);
+
+                    switch (fish_charact.m_type)
+                    {
+                    case FishType::BASIC:
+                        basic_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    /*case FishType::FANCY:
+                        fancy_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    case FishType::BLUE:
+                        blue_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    case FishType::GREEN_ORANGE:
+                        green_orange_fish.Draw(camera, object_shader, renderer);
+                        break;
+                    case FishType::ORANGE:
+                        orange_fish.Draw(camera, object_shader, renderer);
+                        break;*/
+                    }
+                }
             }
 
             //rendering rock 1
@@ -2434,7 +2675,8 @@ int main()
                     glass_panels[draw_order[panel_index].second].Draw(camera, glass_shader, renderer);
             }
         }
-
+        for (auto& fish_charact : fishes_charact)
+            fish_charact.position = fish_charact.next_position;
 
         // Swap front and back buffers 
         glfwSwapBuffers(window);
