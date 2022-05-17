@@ -73,6 +73,58 @@ Mesh InitSandMesh(const Texture& texture)
 
     return Mesh(vertices, indices, texture);
 }
+
+Mesh InitRock(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\stone.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+
+}
+Mesh InitStar(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\18762_Sunflower_Star_starfish_v1.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+
+}
+Mesh InitCoral(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\21485_Elkhorn_Coral_v1.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+
+}
+Mesh InitCoral2(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\20942_Staghorn_Coral_v1_NEW.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+    //20942_Staghorn_Coral_v1_NEW
+}
+Mesh InitPlant1(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\10439_Corn_Field_v1_max2010_it2.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+
+}
+
 Mesh InitAquariumBaseMesh(const Texture& texture)
 {
     std::vector<float> vertices =
@@ -540,6 +592,8 @@ Mesh InitSideWaterMesh()
     return Mesh(vertices, indices);
 }
 
+
+
 int main()
 {
     /* Initializing the library */
@@ -597,11 +651,12 @@ int main()
     Texture orange_fish_texture("resources\\textures\\orange_fish_texture.jpg");
     Texture water_DuDv("resources\\textures\\waterDUDV.png");
     Texture water_NormalMap("resources\\textures\\waterNormalMap.png");
-    Texture rock_texture("resources\\textures\\rock_texture.jpg");
-    Texture star_texture("resources\\textures\\star_texture.jpg");
-    Texture coral_texture("resources\\textures\\coral_red_texture.jpg");
-    Texture coral2_texture("resources\\textures\\coral2_texture.jpg");
-    Texture plant1_texture("resources\\textures\\plant1_texture.jpg");
+    Texture rock_texture("resources\\textures\\marine_rock_texture.jpg");
+    Texture star_texture("resources\\textures\\orange_texture.jpg");
+    Texture star_texture2("resources\\textures\\purple_texture.jpg");
+    Texture coral_texture("resources\\textures\\purple_coral_texture.jpg");
+    Texture coral2_texture("resources\\textures\\pink_coral_texture.jpg");
+    Texture plant1_texture("resources\\textures\\algae_texture.jpg");
 
     // Initialize camera
     Camera camera(window_width, window_height, glm::vec3(0.0f, 15.0f, 30.0f));
@@ -624,10 +679,14 @@ int main()
     Mesh aquarium_base = InitAquariumBaseMesh(wood_texture);
     std::array<Mesh, 4> glass_panels = { InitFrontGlassPanel(), InitBackGlassPanel(), InitRightGlassPanel(), InitLeftGlassPanel() };
     Mesh light_cube = InitLightCubeMesh();
-
     Mesh surface_water = InitSurfaceWaterMesh();
     Mesh side_water = InitSideWaterMesh();
-
+    Mesh starfish = InitStar(star_texture);
+    Mesh rock = InitRock(rock_texture);
+    Mesh star = InitStar(star_texture);
+    Mesh coral = InitCoral(coral2_texture);
+    Mesh coral2 = InitCoral2(coral2_texture);
+    Mesh plant1 = InitPlant1(plant1_texture);
 
     WaterFrameBuffer FBO(window_width, window_height);
     Texture reflection(FBO.GetReflectionTextureID());
@@ -717,6 +776,323 @@ int main()
                 shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
                 aquarium_base.Draw(camera, shadow_shader, renderer);
             }
+            //rendering rock 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 0.6f, -8.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            rock.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering rock 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-15.0f, 1.2f, -9.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            rock.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering rock 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 0.6f, 2.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            rock.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering rock 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 0.6f, -2.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            rock.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering rock 5
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 1.2f, -2.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            rock.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering rock 6
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 1.2f, -1.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            rock.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering star 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+15.0f, 1.2f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, .0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            star.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering star 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 1.95f, -2.0f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, .0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            star.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering star 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 1.95f, 2.0f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, .0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            star.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering coral 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+17.0f, 1.2f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            coral.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering coral 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+13.0f, 1.2f, -9.3f));
+            model = glm::scale(model, glm::vec3(0.04f, 0.04f, 0.04f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            coral.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering coral 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-15.0f, 1.2f, -5.0f));
+            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            coral.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering coral 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-11.0f, 1.2f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.075f, 0.075f, 0.075f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            coral.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering coral 5
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(15.0f, 1.2f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            coral.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering coral v2 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+17.0f, 0.9f, -5.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            coral2.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering coral2 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-14.5f, 0.9f, -3.0f));
+            model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            coral2.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering coral v2 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-18.0f, 0.8f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            coral2.Draw(camera, shadow_shader, renderer);
+
+            }
+
+
+            //rendering coral v2 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(10.0f, 0.8f, -9.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            coral2.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering plant1 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-18.0f, 0.2f, -6.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            plant1.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering plant1 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-18.0f, 0.5f, -10.0f));
+            model = glm::scale(model, glm::vec3((0.03f, 0.03f, 0.03f)));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            plant1.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering plant1 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-14.0f, 0.1f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            plant1.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering plant1 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.5f, 0.5f, 0.0f));
+            model = glm::scale(model, glm::vec3((0.03f, 0.03f, 0.03f)));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            plant1.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering plant1 5
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 0.5f, 3.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            plant1.Draw(camera, shadow_shader, renderer);
+
+            }
+
+            //rendering plant1 6
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 0.5f, -2.5f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            plant1.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering plant1 7
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 0.5f, -6.0f));
+            model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            plant1.Draw(camera, shadow_shader, renderer);
+
+            }
+            //rendering plant1 8
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(14.50f, 0.25f, -10.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+            shadow_shader.Bind();
+            shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
+            plant1.Draw(camera, shadow_shader, renderer);
+
+            }
         }
         Shadow_FBO.UnbindFrameBuffer();
 
@@ -759,6 +1135,354 @@ int main()
                 object_shader.SetUniformMat4f("u_ModelMatrix", model);
                 object_shader.SetUniform1i("shadowMap", 1);
                 aquarium_base.Draw(camera, object_shader, renderer);
+            }
+
+            //rendering rock 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 0.6f, -8.0f));
+
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering rock 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-15.0f, 1.2f, -9.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering rock 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 0.6f, 2.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering rock 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 0.6f, -2.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering rock 5
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 1.2f, -2.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering rock 6
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 1.2f, -1.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering star 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+15.0f, 1.2f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, .0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            star.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering star 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 1.95f, -2.0f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, .0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            star.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering star 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 1.95f, 2.0f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, .0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            star.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering coral 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+17.0f, 1.2f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.07f, 0.07f, 0.07f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+13.0f, 1.2f, -9.3f));
+            model = glm::scale(model, glm::vec3(0.04f, 0.04f, 0.04f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-15.0f, 1.2f, -5.0f));
+            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-11.0f, 1.2f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.075f, 0.075f, 0.075f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 5
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(15.0f, 1.2f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral v2 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+17.0f, 0.9f, -5.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral2.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coralv2 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-14.5f, 0.9f, -3.0f));
+            model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral2.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering coral v2 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-18.0f, 0.8f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral2.Draw(camera, object_shader, renderer);
+
+            }
+
+
+            //rendering coral v2 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(10.0f, 0.8f, -9.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral2.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-18.0f, 0.2f, -6.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering plant1 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-18.0f, 0.5f, -10.0f));
+            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering plant1 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-14.0f, 0.1f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering plant1 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.5f, 0.5f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 5
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 0.5f, 3.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering plant1 6
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 0.5f, -2.5f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 7
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 0.5f, -6.0f));
+            model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 8
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(14.50f, 0.25f, -10.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
             }
 
 
@@ -872,6 +1596,345 @@ int main()
                 aquarium_base.Draw(camera, object_shader, renderer);
             }
 
+            //rendering rock 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 0.6f, -8.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering rock 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-15.0f, 1.2f, -9.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering rock 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 0.6f, 2.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering rock 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 0.6f, -2.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering rock 5
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 1.2f, -2.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering rock 6
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 1.2f, -1.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering star 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+15.0f, 1.2f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            star.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering star 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 1.95f, -2.0f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, .0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            star.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering star 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 1.95f, 2.0f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, .0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            star.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+17.0f, 1.2f, -8.0f));
+
+            model = glm::scale(model, glm::vec3(0.07f, 0.07f, 0.07f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+13.0f, 1.2f, -9.3f));
+            model = glm::scale(model, glm::vec3(0.04f, 0.04f, 0.04f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering coral 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-15.0f, 1.2f, -5.0f));
+            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering coral 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-11.0f, 1.2f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.075f, 0.075f, 0.075f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 5
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(15.0f, 1.2f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral v2 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+17.0f, 0.9f, -5.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral2.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering coralv2 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-14.5f, 0.9f, -3.0f));
+            model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral2.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral v2 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-18.0f, 0.8f, 1.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral2.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral v2 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(10.0f, 0.8f, -9.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral2.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-18.0f, 0.2f, -6.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-18.0f, 0.5f, -10.0f));
+            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-14.0f, 0.1f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.5f, 0.5f, 0.0f));
+            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering plant1 5
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 0.5f, 3.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 6
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 0.5f, -2.5f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 7
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 0.5f, -6.0f));
+            model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 8
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(14.50f, 0.25f, -10.0f));
+            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            plant1.Draw(camera, object_shader, renderer);
+
+            }
 
         }
         FBO.UnbindFrameBuffer();
@@ -912,6 +1975,362 @@ int main()
                 aquarium_base.Draw(camera, object_shader, renderer);
             }
 
+            //rendering rock 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 0.6f, -8.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering rock 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-15.0f, 1.2f, -9.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering rock 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 0.6f, 2.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering rock 4
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 0.6f, -2.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering rock 5
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 1.2f, -2.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering rock 6
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(19.0f, 1.2f, -1.0f));
+            model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+            model = glm::rotate(model, glm::radians(70.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            rock.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering star 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+15.0f, 1.2f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            star.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering star 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(-17.0f, 1.95f, -2.0f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, .0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            star.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering star 3
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(17.0f, 1.95f, 2.0f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, .0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            star.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 1
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+17.0f, 1.2f, -8.0f));
+            model = glm::scale(model, glm::vec3(0.07f, 0.07f, 0.07f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 2
+            {  glm::mat4 model = glm::mat4(1.0f);
+            model = glm::translate(model, aquarium_translation);
+            model = glm::translate(model, glm::vec3(+13.0f, 1.2f, -9.3f));
+            model = glm::scale(model, glm::vec3(0.04f, 0.04f, 0.04f));
+            model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            shadow_depth_map.Bind(1);
+            object_shader.Bind();
+            object_shader.SetUniformMat4f("u_ModelMatrix", model);
+            object_shader.SetUniform1i("shadowMap", 1);
+            coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 3
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(-15.0f, 1.2f, -5.0f));
+                model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral 4
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(-11.0f, 1.2f, -8.0f));
+                model = glm::scale(model, glm::vec3(0.075f, 0.075f, 0.075f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                coral.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering coral 5
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(15.0f, 1.2f, 0.0f));
+                model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                coral.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coralv2 1
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(+17.0f, 0.9f, -5.0f));
+                model = glm::scale(model, glm::vec3(0.3f, 0.3f, 0.3f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                coral2.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering coralv2 2
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(-14.5f, 0.9f, -3.0f));
+                model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                coral2.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering coral v2 3
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(-18.0f, 0.8f, 1.0f));
+                model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                coral2.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering coral v2 4
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(10.0f, 0.8f, -9.0f));
+                model = glm::scale(model, glm::vec3(0.4f, 0.4f, 0.4f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                coral2.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 1
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(-18.0f, 0.2f, -6.0f));
+                model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                plant1.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering plant1 2
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(-18.0f, 0.5f, -10.0f));
+                model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                plant1.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering plant1 3
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(-14.0f, 0.1f, -8.0f));
+                model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                plant1.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering plant1 4
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(17.5f, 0.5f, 0.0f));
+                model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 5
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(19.0f, 0.5f, 3.0f));
+                model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 6
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(19.0f, 0.5f, -2.5f));
+                model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                plant1.Draw(camera, object_shader, renderer);
+
+            }
+
+            //rendering plant1 7
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(19.0f, 0.5f, -6.0f));
+                model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                plant1.Draw(camera, object_shader, renderer);
+
+            }
+            //rendering plant1 8
+            {
+                glm::mat4 model = glm::mat4(1.0f);
+                model = glm::translate(model, aquarium_translation);
+                model = glm::translate(model, glm::vec3(14.50f, 0.25f, -10.0f));
+                model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+                model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                shadow_depth_map.Bind(1);
+                object_shader.Bind();
+                object_shader.SetUniformMat4f("u_ModelMatrix", model);
+                object_shader.SetUniform1i("shadowMap", 1);
+                plant1.Draw(camera, object_shader, renderer);
+
+            }
 
             //rendering light cube
             {
