@@ -73,58 +73,6 @@ Mesh InitSandMesh(const Texture& texture)
 
     return Mesh(vertices, indices, texture);
 }
-
-Mesh InitRock(const Texture& texture)
-{
-    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\stone.obj");
-    std::vector<unsigned int> indices;
-    for (unsigned int i = 0; i < vertices.size() / 8; i++)
-        indices.push_back(i);
-
-    return Mesh(vertices, indices, texture);
-
-}
-Mesh InitStar(const Texture& texture)
-{
-    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\18762_Sunflower_Star_starfish_v1.obj");
-    std::vector<unsigned int> indices;
-    for (unsigned int i = 0; i < vertices.size() / 8; i++)
-        indices.push_back(i);
-
-    return Mesh(vertices, indices, texture);
-
-}
-Mesh InitCoral(const Texture& texture)
-{
-    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\21485_Elkhorn_Coral_v1.obj");
-    std::vector<unsigned int> indices;
-    for (unsigned int i = 0; i < vertices.size() / 8; i++)
-        indices.push_back(i);
-
-    return Mesh(vertices, indices, texture);
-
-}
-Mesh InitCoral2(const Texture& texture)
-{
-    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\20942_Staghorn_Coral_v1_NEW.obj");
-    std::vector<unsigned int> indices;
-    for (unsigned int i = 0; i < vertices.size() / 8; i++)
-        indices.push_back(i);
-
-    return Mesh(vertices, indices, texture);
-    //20942_Staghorn_Coral_v1_NEW
-}
-Mesh InitPlant1(const Texture& texture)
-{
-    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\10439_Corn_Field_v1_max2010_it2.obj");
-    std::vector<unsigned int> indices;
-    for (unsigned int i = 0; i < vertices.size() / 8; i++)
-        indices.push_back(i);
-
-    return Mesh(vertices, indices, texture);
-
-}
-
 Mesh InitAquariumBaseMesh(const Texture& texture)
 {
     std::vector<float> vertices =
@@ -591,9 +539,59 @@ Mesh InitSideWaterMesh()
     };
     return Mesh(vertices, indices);
 }
+Mesh InitRock(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\stone.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+
+}
+Mesh InitStar(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\18762_Sunflower_Star_starfish_v1.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+
+}
+Mesh InitCoral(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\21485_Elkhorn_Coral_v1.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+
+}
+Mesh InitCoral2(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\20942_Staghorn_Coral_v1_NEW.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+    //20942_Staghorn_Coral_v1_NEW
+}
+Mesh InitPlant1(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\10439_Corn_Field_v1_max2010_it2.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+
+}
 Mesh InitBasicFish(const Texture& texture)
 {
-    std::vector<float> vertices = ObjLoader::Parse("res\\models\\fish.obj");
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\fish.obj");
     std::vector<unsigned int> indices;
     for (unsigned int i = 0; i < vertices.size() / 8; i++)
         indices.push_back(i);
@@ -634,7 +632,6 @@ struct FishCharacteristics
     }
 
 };
-
 void CreateFishes(std::vector<FishCharacteristics>& fishes)
 {
     fishes.emplace_back(FishCharacteristics(0.3f, 0.005f, 14.0f, 4.8f, 5.6f, -0.1f, FishType::BASIC));
@@ -674,6 +671,7 @@ void CreateFishes(std::vector<FishCharacteristics>& fishes)
     fishes.emplace_back(FishCharacteristics(0.35f, 0.0035f, 11.0f, 5.0f, -5.6f, 2.0f, FishType::ORANGE));
     fishes.emplace_back(FishCharacteristics(0.42f, 0.004f, 15.0f, 2.0f, 4.0f, 1.0f, FishType::ORANGE));
 }
+
 
 int main()
 {
@@ -759,14 +757,17 @@ int main()
     Mesh sand = InitSandMesh(sand_texture);
     Mesh aquarium_base = InitAquariumBaseMesh(wood_texture);
     std::array<Mesh, 4> glass_panels = { InitFrontGlassPanel(), InitBackGlassPanel(), InitRightGlassPanel(), InitLeftGlassPanel() };
-    Mesh basic_fish = InitBasicFish(basic_fish_texture);
     Mesh light_cube = InitLightCubeMesh();
+    Mesh basic_fish = InitBasicFish(basic_fish_texture);
+   /* Mesh fancy_fish = InitFancyFish(fancy_fish_texture);
+    Mesh blue_fish = InitBlueFish(blue_fish_texture);
+    Mesh green_orange_fish = InitGreenOrangeFish(green_orange_fish_texture);
+    Mesh orange_fish = InitOrangeFish(orange_fish_texture);*/
     Mesh surface_water = InitSurfaceWaterMesh();
     Mesh side_water = InitSideWaterMesh();
-    Mesh starfish = InitStar(star_texture);
     Mesh rock = InitRock(rock_texture);
     Mesh star = InitStar(star_texture);
-    Mesh coral = InitCoral(coral2_texture);
+    Mesh coral = InitCoral(coral_texture);
     Mesh coral2 = InitCoral2(coral2_texture);
     Mesh plant1 = InitPlant1(plant1_texture);
 
@@ -784,8 +785,10 @@ int main()
     float water_height = 4.5f * aquarium_scaling.y, wave_move_factor = 0.0f;
     surface_water.SetTexture(reflection);
 
+    //fish movement
     std::vector<FishCharacteristics> fishes_charact;
     CreateFishes(fishes_charact);
+
 
     while (!glfwWindowShouldClose(window))
     {
@@ -869,6 +872,8 @@ int main()
                 shadow_shader.SetUniformMat4f("u_ModelMatrix", model);
                 aquarium_base.Draw(camera, shadow_shader, renderer);
             }
+
+            //rendering fish
             {
                 for (auto& fish_charact : fishes_charact)
                 {
@@ -904,6 +909,7 @@ int main()
                     }
                 }
             }
+
             //rendering rock 1
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
@@ -1014,7 +1020,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(+17.0f, 1.2f, -8.0f));
-            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+            model = glm::scale(model, glm::vec3(0.07f, 0.07f, 0.07f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
             shadow_shader.Bind();
@@ -1082,7 +1088,7 @@ int main()
             coral2.Draw(camera, shadow_shader, renderer);
 
             }
-            //rendering coral2 2
+            //rendering coralv2 2
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(-14.5f, 0.9f, -3.0f));
@@ -1125,7 +1131,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(-18.0f, 0.2f, -6.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
             shadow_shader.Bind();
@@ -1138,7 +1144,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(-18.0f, 0.5f, -10.0f));
-            model = glm::scale(model, glm::vec3((0.03f, 0.03f, 0.03f)));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
             shadow_shader.Bind();
@@ -1151,7 +1157,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(-14.0f, 0.1f, -8.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
             shadow_shader.Bind();
@@ -1164,7 +1170,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(17.5f, 0.5f, 0.0f));
-            model = glm::scale(model, glm::vec3((0.03f, 0.03f, 0.03f)));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
             shadow_shader.Bind();
@@ -1176,7 +1182,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(19.0f, 0.5f, 3.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
             shadow_shader.Bind();
@@ -1189,7 +1195,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(19.0f, 0.5f, -2.5f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
             shadow_shader.Bind();
@@ -1201,7 +1207,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(19.0f, 0.5f, -6.0f));
-            model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
             shadow_shader.Bind();
@@ -1213,7 +1219,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(14.50f, 0.25f, -10.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 
             shadow_shader.Bind();
@@ -1265,6 +1271,7 @@ int main()
                 aquarium_base.Draw(camera, object_shader, renderer);
             }
 
+            //rendering fish
             {
                 for (auto& fish_charact : fishes_charact)
                 {
@@ -1288,7 +1295,7 @@ int main()
                     case FishType::BASIC:
                         basic_fish.Draw(camera, object_shader, renderer);
                         break;
-                    /*case FishType::FANCY:
+                   /* case FishType::FANCY:
                         fancy_fish.Draw(camera, object_shader, renderer);
                         break;
                     case FishType::BLUE:
@@ -1547,7 +1554,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(-18.0f, 0.2f, -6.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -1561,7 +1568,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(-18.0f, 0.5f, -10.0f));
-            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -1575,7 +1582,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(-14.0f, 0.1f, -8.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -1589,7 +1596,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(17.5f, 0.5f, 0.0f));
-            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -1602,7 +1609,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(19.0f, 0.5f, 3.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -1616,7 +1623,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(19.0f, 0.5f, -2.5f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -1629,7 +1636,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(19.0f, 0.5f, -6.0f));
-            model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -1642,7 +1649,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(14.50f, 0.25f, -10.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -1651,8 +1658,6 @@ int main()
             plant1.Draw(camera, object_shader, renderer);
 
             }
-
-
             //rendering light cube
             {
                 glDisable(GL_CLIP_DISTANCE0);//the light cube should not be affected by the clipping
@@ -1762,6 +1767,8 @@ int main()
                 object_shader.SetUniform1i("shadowMap", 1);
                 aquarium_base.Draw(camera, object_shader, renderer);
             }
+
+            //rendering fish
             {
                 for (auto& fish_charact : fishes_charact)
                 {
@@ -1784,7 +1791,7 @@ int main()
                     case FishType::BASIC:
                         basic_fish.Draw(camera, object_shader, renderer);
                         break;
-                   /* case FishType::FANCY:
+                    /*case FishType::FANCY:
                         fancy_fish.Draw(camera, object_shader, renderer);
                         break;
                     case FishType::BLUE:
@@ -1799,6 +1806,7 @@ int main()
                     }
                 }
             }
+
             //rendering rock 1
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
@@ -2037,7 +2045,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(-18.0f, 0.2f, -6.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -2050,7 +2058,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(-18.0f, 0.5f, -10.0f));
-            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -2063,7 +2071,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(-14.0f, 0.1f, -8.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -2076,7 +2084,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(17.5f, 0.5f, 0.0f));
-            model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -2090,7 +2098,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(19.0f, 0.5f, 3.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -2103,7 +2111,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(19.0f, 0.5f, -2.5f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -2116,7 +2124,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(19.0f, 0.5f, -6.0f));
-            model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+            model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -2129,7 +2137,7 @@ int main()
             {  glm::mat4 model = glm::mat4(1.0f);
             model = glm::translate(model, aquarium_translation);
             model = glm::translate(model, glm::vec3(14.50f, 0.25f, -10.0f));
-            model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+            model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
             model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
             shadow_depth_map.Bind(1);
             object_shader.Bind();
@@ -2138,7 +2146,6 @@ int main()
             plant1.Draw(camera, object_shader, renderer);
 
             }
-
         }
         FBO.UnbindFrameBuffer();
 
@@ -2178,6 +2185,7 @@ int main()
                 aquarium_base.Draw(camera, object_shader, renderer);
             }
 
+            //rendering fish
             {
                 for (auto& fish_charact : fishes_charact)
                 {
@@ -2461,7 +2469,7 @@ int main()
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, aquarium_translation);
                 model = glm::translate(model, glm::vec3(-18.0f, 0.2f, -6.0f));
-                model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+                model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
                 model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 shadow_depth_map.Bind(1);
                 object_shader.Bind();
@@ -2476,7 +2484,7 @@ int main()
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, aquarium_translation);
                 model = glm::translate(model, glm::vec3(-18.0f, 0.5f, -10.0f));
-                model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+                model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
                 model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 shadow_depth_map.Bind(1);
                 object_shader.Bind();
@@ -2491,7 +2499,7 @@ int main()
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, aquarium_translation);
                 model = glm::translate(model, glm::vec3(-14.0f, 0.1f, -8.0f));
-                model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+                model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
                 model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 shadow_depth_map.Bind(1);
                 object_shader.Bind();
@@ -2506,7 +2514,7 @@ int main()
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, aquarium_translation);
                 model = glm::translate(model, glm::vec3(17.5f, 0.5f, 0.0f));
-                model = glm::scale(model, glm::vec3(0.03f, 0.03f, 0.03f));
+                model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
                 model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 shadow_depth_map.Bind(1);
                 object_shader.Bind();
@@ -2520,7 +2528,7 @@ int main()
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, aquarium_translation);
                 model = glm::translate(model, glm::vec3(19.0f, 0.5f, 3.0f));
-                model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+                model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
                 model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 shadow_depth_map.Bind(1);
                 object_shader.Bind();
@@ -2534,7 +2542,7 @@ int main()
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, aquarium_translation);
                 model = glm::translate(model, glm::vec3(19.0f, 0.5f, -2.5f));
-                model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+                model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
                 model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 shadow_depth_map.Bind(1);
                 object_shader.Bind();
@@ -2549,7 +2557,7 @@ int main()
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, aquarium_translation);
                 model = glm::translate(model, glm::vec3(19.0f, 0.5f, -6.0f));
-                model = glm::scale(model, glm::vec3(0.02f, 0.02f, 0.02f));
+                model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
                 model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 shadow_depth_map.Bind(1);
                 object_shader.Bind();
@@ -2563,7 +2571,7 @@ int main()
                 glm::mat4 model = glm::mat4(1.0f);
                 model = glm::translate(model, aquarium_translation);
                 model = glm::translate(model, glm::vec3(14.50f, 0.25f, -10.0f));
-                model = glm::scale(model, glm::vec3(0.05f, 0.05f, 0.05f));
+                model = glm::scale(model, glm::vec3(0.15f, 0.15f, 0.15f));
                 model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 shadow_depth_map.Bind(1);
                 object_shader.Bind();
@@ -2572,7 +2580,6 @@ int main()
                 plant1.Draw(camera, object_shader, renderer);
 
             }
-
             //rendering light cube
             {
                 glDisable(GL_CLIP_DISTANCE0);//the light cube should not be affected by the clipping
@@ -2675,6 +2682,8 @@ int main()
                     glass_panels[draw_order[panel_index].second].Draw(camera, glass_shader, renderer);
             }
         }
+
+        //update fish positions
         for (auto& fish_charact : fishes_charact)
             fish_charact.position = fish_charact.next_position;
 
