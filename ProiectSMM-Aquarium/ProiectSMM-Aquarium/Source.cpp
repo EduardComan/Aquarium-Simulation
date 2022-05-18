@@ -735,7 +735,7 @@ int main()
     // loading texture
     Texture sand_texture("resources\\textures\\sand.jpg");
     Texture wood_texture("resources\\textures\\wood.jpg");
-    Texture basic_fish_texture("resources\\textures\\fish_texture.png");
+    Texture basic_fish_texture("resources\\textures\\13006_Blue_Tang_v1_diff.jpg");
     Texture fancy_fish_texture("resources\\textures\\fancy_fish_texture.jpg");
     Texture blue_fish_texture("resources\\textures\\blue_fish_texture.jpg");
     Texture green_orange_fish_texture("resources\\textures\\green_orange_fish_texture.jpg");

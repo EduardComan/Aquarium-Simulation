@@ -1,5 +1,4 @@
-﻿  Source.cpp
-Camera.obj : error LNK2019: unresolved external symbol glfwSetWindowShouldClose referenced in function "private: void __cdecl Camera::KeyboardControl(struct GLFWwindow *,float)" (?KeyboardControl@Camera@@AEAAXPEAUGLFWwindow@@M@Z)
+﻿Camera.obj : error LNK2019: unresolved external symbol glfwSetWindowShouldClose referenced in function "private: void __cdecl Camera::KeyboardControl(struct GLFWwindow *,float)" (?KeyboardControl@Camera@@AEAAXPEAUGLFWwindow@@M@Z)
 Camera.obj : error LNK2019: unresolved external symbol glfwGetKey referenced in function "private: void __cdecl Camera::KeyboardControl(struct GLFWwindow *,float)" (?KeyboardControl@Camera@@AEAAXPEAUGLFWwindow@@M@Z)
 Camera.obj : error LNK2019: unresolved external symbol glfwGetCursorPos referenced in function "private: void __cdecl Camera::MouseControl(struct GLFWwindow *)" (?MouseControl@Camera@@AEAAXPEAUGLFWwindow@@@Z)
 Camera.obj : error LNK2019: unresolved external symbol glfwSetCursorPos referenced in function "private: void __cdecl Camera::MouseControl(struct GLFWwindow *)" (?MouseControl@Camera@@AEAAXPEAUGLFWwindow@@@Z)
@@ -15,9 +14,6 @@ VertexBuffer.obj : error LNK2001: unresolved external symbol __imp___glewDeleteB
 IndexBuffer.obj : error LNK2019: unresolved external symbol __imp___glewGenBuffers referenced in function "public: __cdecl IndexBuffer::IndexBuffer(unsigned int const *,unsigned int)" (??0IndexBuffer@@QEAA@PEBII@Z)
 Skybox.obj : error LNK2001: unresolved external symbol __imp___glewGenBuffers
 VertexBuffer.obj : error LNK2001: unresolved external symbol __imp___glewGenBuffers
-Renderer.obj : error LNK2019: unresolved external symbol __imp_glClear referenced in function "public: void __cdecl Renderer::Clear(void)const " (?Clear@Renderer@@QEBAXXZ)
-ShadowFrameBuffer.obj : error LNK2001: unresolved external symbol __imp_glClear
-Renderer.obj : error LNK2019: unresolved external symbol __imp_glDrawElements referenced in function "public: void __cdecl Renderer::Draw(class VertexArray const &,class IndexBuffer const &,class Shader const &)const " (?Draw@Renderer@@QEBAXAEBVVertexArray@@AEBVIndexBuffer@@AEBVShader@@@Z)
 Shader.obj : error LNK2019: unresolved external symbol __imp___glewAttachShader referenced in function "private: unsigned int __cdecl Shader::CreateShader(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?CreateShader@Shader@@AEAAIAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z)
 Shader.obj : error LNK2019: unresolved external symbol __imp___glewCompileShader referenced in function "private: unsigned int __cdecl Shader::CompileShader(unsigned int,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?CompileShader@Shader@@AEAAIIAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
 Shader.obj : error LNK2019: unresolved external symbol __imp___glewCreateProgram referenced in function "private: unsigned int __cdecl Shader::CreateShader(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?CreateShader@Shader@@AEAAIAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z)
@@ -36,29 +32,6 @@ Shader.obj : error LNK2019: unresolved external symbol __imp___glewUniform4f ref
 Shader.obj : error LNK2019: unresolved external symbol __imp___glewUniformMatrix4fv referenced in function "public: void __cdecl Shader::SetUniformMat4f(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,struct glm::mat<4,4,float,0> const &)" (?SetUniformMat4f@Shader@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBU?$mat@$03$03M$0A@@glm@@@Z)
 Shader.obj : error LNK2019: unresolved external symbol __imp___glewUseProgram referenced in function "public: void __cdecl Shader::Bind(void)const " (?Bind@Shader@@QEBAXXZ)
 Shader.obj : error LNK2019: unresolved external symbol __imp___glewValidateProgram referenced in function "private: unsigned int __cdecl Shader::CreateShader(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?CreateShader@Shader@@AEAAIAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z)
-ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp_glBindTexture referenced in function "public: void __cdecl ShadowFrameBuffer::BindFrameBuffer(void)" (?BindFrameBuffer@ShadowFrameBuffer@@QEAAXXZ)
-Skybox.obj : error LNK2001: unresolved external symbol __imp_glBindTexture
-Texture.obj : error LNK2001: unresolved external symbol __imp_glBindTexture
-WaterFrameBuffer.obj : error LNK2001: unresolved external symbol __imp_glBindTexture
-ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp_glDeleteTextures referenced in function "public: __cdecl ShadowFrameBuffer::~ShadowFrameBuffer(void)" (??1ShadowFrameBuffer@@QEAA@XZ)
-Texture.obj : error LNK2001: unresolved external symbol __imp_glDeleteTextures
-WaterFrameBuffer.obj : error LNK2001: unresolved external symbol __imp_glDeleteTextures
-ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp_glDrawBuffer referenced in function "private: unsigned int __cdecl ShadowFrameBuffer::CreateFrameBuffer(void)const " (?CreateFrameBuffer@ShadowFrameBuffer@@AEBAIXZ)
-WaterFrameBuffer.obj : error LNK2001: unresolved external symbol __imp_glDrawBuffer
-ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp_glGenTextures referenced in function "private: unsigned int __cdecl ShadowFrameBuffer::CreateDepthTextureAttachment(unsigned int,unsigned int)const " (?CreateDepthTextureAttachment@ShadowFrameBuffer@@AEBAIII@Z)
-Skybox.obj : error LNK2001: unresolved external symbol __imp_glGenTextures
-Texture.obj : error LNK2001: unresolved external symbol __imp_glGenTextures
-WaterFrameBuffer.obj : error LNK2001: unresolved external symbol __imp_glGenTextures
-ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp_glTexImage2D referenced in function "private: unsigned int __cdecl ShadowFrameBuffer::CreateDepthTextureAttachment(unsigned int,unsigned int)const " (?CreateDepthTextureAttachment@ShadowFrameBuffer@@AEBAIII@Z)
-Skybox.obj : error LNK2001: unresolved external symbol __imp_glTexImage2D
-Texture.obj : error LNK2001: unresolved external symbol __imp_glTexImage2D
-WaterFrameBuffer.obj : error LNK2001: unresolved external symbol __imp_glTexImage2D
-ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp_glTexParameteri referenced in function "private: unsigned int __cdecl ShadowFrameBuffer::CreateDepthTextureAttachment(unsigned int,unsigned int)const " (?CreateDepthTextureAttachment@ShadowFrameBuffer@@AEBAIII@Z)
-Skybox.obj : error LNK2001: unresolved external symbol __imp_glTexParameteri
-Texture.obj : error LNK2001: unresolved external symbol __imp_glTexParameteri
-WaterFrameBuffer.obj : error LNK2001: unresolved external symbol __imp_glTexParameteri
-ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp_glViewport referenced in function "public: void __cdecl ShadowFrameBuffer::BindFrameBuffer(void)" (?BindFrameBuffer@ShadowFrameBuffer@@QEAAXXZ)
-WaterFrameBuffer.obj : error LNK2001: unresolved external symbol __imp_glViewport
 ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp___glewFramebufferTexture referenced in function "private: unsigned int __cdecl ShadowFrameBuffer::CreateDepthTextureAttachment(unsigned int,unsigned int)const " (?CreateDepthTextureAttachment@ShadowFrameBuffer@@AEBAIII@Z)
 WaterFrameBuffer.obj : error LNK2001: unresolved external symbol __imp___glewFramebufferTexture
 ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp___glewCreateFramebuffers referenced in function "private: unsigned int __cdecl ShadowFrameBuffer::CreateFrameBuffer(void)const " (?CreateFrameBuffer@ShadowFrameBuffer@@AEBAIXZ)
@@ -77,8 +50,6 @@ ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp___glewGe
 WaterFrameBuffer.obj : error LNK2001: unresolved external symbol __imp___glewGenRenderbuffers
 ShadowFrameBuffer.obj : error LNK2019: unresolved external symbol __imp___glewRenderbufferStorage referenced in function "private: unsigned int __cdecl ShadowFrameBuffer::CreateDepthBufferAttachment(unsigned int,unsigned int)const " (?CreateDepthBufferAttachment@ShadowFrameBuffer@@AEBAIII@Z)
 WaterFrameBuffer.obj : error LNK2001: unresolved external symbol __imp___glewRenderbufferStorage
-Skybox.obj : error LNK2019: unresolved external symbol __imp_glDepthFunc referenced in function "public: void __cdecl Skybox::Draw(struct glm::mat<4,4,float,0> const &,struct glm::mat<4,4,float,0> const &)" (?Draw@Skybox@@QEAAXAEBU?$mat@$03$03M$0A@@glm@@0@Z)
-Skybox.obj : error LNK2019: unresolved external symbol __imp_glDrawArrays referenced in function "public: void __cdecl Skybox::Draw(struct glm::mat<4,4,float,0> const &,struct glm::mat<4,4,float,0> const &)" (?Draw@Skybox@@QEAAXAEBU?$mat@$03$03M$0A@@glm@@0@Z)
 Skybox.obj : error LNK2019: unresolved external symbol __imp___glewActiveTexture referenced in function "public: void __cdecl Skybox::Draw(struct glm::mat<4,4,float,0> const &,struct glm::mat<4,4,float,0> const &)" (?Draw@Skybox@@QEAAXAEBU?$mat@$03$03M$0A@@glm@@0@Z)
 Texture.obj : error LNK2001: unresolved external symbol __imp___glewActiveTexture
 Skybox.obj : error LNK2019: unresolved external symbol __imp___glewEnableVertexAttribArray referenced in function "public: __cdecl Skybox::Skybox(void)" (??0Skybox@@QEAA@XZ)
@@ -89,10 +60,6 @@ Skybox.obj : error LNK2019: unresolved external symbol __imp___glewBindVertexArr
 VertexArray.obj : error LNK2001: unresolved external symbol __imp___glewBindVertexArray
 Skybox.obj : error LNK2019: unresolved external symbol __imp___glewGenVertexArrays referenced in function "public: __cdecl Skybox::Skybox(void)" (??0Skybox@@QEAA@XZ)
 VertexArray.obj : error LNK2001: unresolved external symbol __imp___glewGenVertexArrays
-Source.obj : error LNK2019: unresolved external symbol __imp_glBlendFunc referenced in function main
-Source.obj : error LNK2019: unresolved external symbol __imp_glClearColor referenced in function main
-Source.obj : error LNK2019: unresolved external symbol __imp_glDisable referenced in function main
-Source.obj : error LNK2019: unresolved external symbol __imp_glEnable referenced in function main
 Source.obj : error LNK2019: unresolved external symbol __imp_glewInit referenced in function main
 Source.obj : error LNK2019: unresolved external symbol glfwInit referenced in function main
 Source.obj : error LNK2019: unresolved external symbol glfwTerminate referenced in function main
@@ -105,4 +72,7 @@ Source.obj : error LNK2019: unresolved external symbol glfwGetTime referenced in
 Source.obj : error LNK2019: unresolved external symbol glfwMakeContextCurrent referenced in function main
 Source.obj : error LNK2019: unresolved external symbol glfwSwapBuffers referenced in function main
 VertexArray.obj : error LNK2019: unresolved external symbol __imp___glewDeleteVertexArrays referenced in function "public: __cdecl VertexArray::~VertexArray(void)" (??1VertexArray@@QEAA@XZ)
-D:\Facultate\Anul II\Semestrul 2\SMM\Laborator\Aquarium-Simulation\ProiectSMM-Aquarium\x64\Debug\ProiectSMM-Aquarium.exe : fatal error LNK1120: 67 unresolved externals
+..\..\..\_external\glew-2.1.0\lib\Release\Win32\glew32.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+..\..\..\_external\glfw-3.3.6.bin.WIN32\lib-vc2019\glfw3.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+..\..\..\_external\freeglut\lib\freeglut.lib : warning LNK4272: library machine type 'x86' conflicts with target machine type 'x64'
+D:\Facultate\Anul II\Semestrul 2\SMM\Laborator\Aquarium-Simulation-SMM\ProiectSMM-Aquarium\x64\Debug\ProiectSMM-Aquarium.exe : fatal error LNK1120: 52 unresolved externals
