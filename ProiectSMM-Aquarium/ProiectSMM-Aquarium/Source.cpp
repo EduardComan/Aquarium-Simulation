@@ -610,13 +610,39 @@ Mesh InitBasicFish(const Texture& texture)
 
     return Mesh(vertices, indices, texture);
 }
+Mesh InitFancyFish(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\13007_Blue-Green_Reef_Chromis_v2_l3.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+}
+//Mesh InitBlueFish(const Texture& texture)
+//{
+//    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\13006_Blue_Tang_v1_l3.obj");
+//    std::vector<unsigned int> indices;
+//    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+//        indices.push_back(i);
+//
+//    return Mesh(vertices, indices, texture);
+//}
+Mesh InitGreenOrangeFish(const Texture& texture)
+{
+    std::vector<float> vertices = ObjLoader::Parse("resources\\models\\12999_Boesemani_Rainbow_v1_l2.obj");
+    std::vector<unsigned int> indices;
+    for (unsigned int i = 0; i < vertices.size() / 8; i++)
+        indices.push_back(i);
+
+    return Mesh(vertices, indices, texture);
+}
 enum class FishType
 {
     BASIC,
     FANCY,
     BLUE,
-    GREEN_ORANGE,
-    ORANGE
+    GREEN_ORANGE
 };
 
 struct FishCharacteristics
@@ -677,11 +703,8 @@ void CreateFishes(std::vector<FishCharacteristics>& fishes)
     fishes.emplace_back(FishCharacteristics(1.0f, 0.002f, 10.0f, 5.0f, 3.0f, -0.5f, FishType::BLUE));
     fishes.emplace_back(FishCharacteristics(0.5f, 0.002f, 16.0f, 7.0f, 6.5f, 1.0f, FishType::GREEN_ORANGE));
     fishes.emplace_back(FishCharacteristics(0.55f, 0.002f, -15.6f, 6.5f, 5.7f, 1.0f, FishType::FANCY));
-    fishes.emplace_back(FishCharacteristics(0.4f, 0.0045f, 12.0f, 4.7f, -3.0f, 0.0f, FishType::ORANGE));
     fishes.emplace_back(FishCharacteristics(1.2f, 0.002f, -7.0f, 2.0f, 3.0f, 2.0f, FishType::BLUE));
     fishes.emplace_back(FishCharacteristics(0.3f, 0.0035f, 15.0f, 7.5f, 6.0f, 0.0f, FishType::GREEN_ORANGE));
-    fishes.emplace_back(FishCharacteristics(0.35f, 0.0035f, 11.0f, 5.0f, -5.6f, 2.0f, FishType::ORANGE));
-    fishes.emplace_back(FishCharacteristics(0.42f, 0.004f, 15.0f, 2.0f, 4.0f, 1.0f, FishType::ORANGE));
 }
 
 
@@ -735,11 +758,10 @@ int main()
     // loading texture
     Texture sand_texture("resources\\textures\\sand.jpg");
     Texture wood_texture("resources\\textures\\wood.jpg");
-    Texture basic_fish_texture("resources\\textures\\13006_Blue_Tang_v1_diff.jpg");
-    Texture fancy_fish_texture("resources\\textures\\fancy_fish_texture.jpg");
-    Texture blue_fish_texture("resources\\textures\\blue_fish_texture.jpg");
-    Texture green_orange_fish_texture("resources\\textures\\green_orange_fish_texture.jpg");
-    Texture orange_fish_texture("resources\\textures\\orange_fish_texture.jpg");
+    Texture basic_fish_texture("resources\\textures\\fish_texture.png");
+    Texture fancy_fish_texture("resources\\textures\\13004_Bicolor_Blenny_v1_diff.jpg");
+    //Texture blue_fish_texture("resources\\textures\\13006_Blue_Tang_v1_diff.jpg");
+    Texture green_orange_fish_texture("resources\\textures\\12999_Boesemani_Rainbow_diff.jpg");
     Texture water_DuDv("resources\\textures\\waterDUDV.png");
     Texture water_NormalMap("resources\\textures\\waterNormalMap.png");
     Texture rock_texture("resources\\textures\\marine_rock_texture.jpg");
@@ -772,10 +794,9 @@ int main()
     std::array<Mesh, 4> glass_panels = { InitFrontGlassPanel(), InitBackGlassPanel(), InitRightGlassPanel(), InitLeftGlassPanel() };
     Mesh light_cube = InitLightCubeMesh();
     Mesh basic_fish = InitBasicFish(basic_fish_texture);
-   /* Mesh fancy_fish = InitFancyFish(fancy_fish_texture);
-    Mesh blue_fish = InitBlueFish(blue_fish_texture);
+    Mesh fancy_fish = InitFancyFish(fancy_fish_texture);
+    //Mesh blue_fish = InitBlueFish(blue_fish_texture);
     Mesh green_orange_fish = InitGreenOrangeFish(green_orange_fish_texture);
-    Mesh orange_fish = InitOrangeFish(orange_fish_texture);*/
     Mesh surface_water = InitSurfaceWaterMesh();
     Mesh side_water = InitSideWaterMesh();
     Mesh rock = InitRock(rock_texture);
@@ -908,18 +929,15 @@ int main()
                     case FishType::BASIC:
                         basic_fish.Draw(camera, shadow_shader, renderer);
                         break;
-                   /* case FishType::FANCY:
+                    case FishType::FANCY:
                         fancy_fish.Draw(camera, shadow_shader, renderer);
                         break;
                     case FishType::BLUE:
-                        blue_fish.Draw(camera, shadow_shader, renderer);
+                        //blue_fish.Draw(camera, shadow_shader, renderer);
                         break;
                     case FishType::GREEN_ORANGE:
                         green_orange_fish.Draw(camera, shadow_shader, renderer);
                         break;
-                    case FishType::ORANGE:
-                        orange_fish.Draw(camera, shadow_shader, renderer);
-                        break;*/
                     }
                 }
             }
@@ -1322,18 +1340,15 @@ int main()
                     case FishType::BASIC:
                         basic_fish.Draw(camera, object_shader, renderer);
                         break;
-                   /* case FishType::FANCY:
+                    case FishType::FANCY:
                         fancy_fish.Draw(camera, object_shader, renderer);
                         break;
                     case FishType::BLUE:
-                        blue_fish.Draw(camera, object_shader, renderer);
+                        //blue_fish.Draw(camera, object_shader, renderer);
                         break;
                     case FishType::GREEN_ORANGE:
                         green_orange_fish.Draw(camera, object_shader, renderer);
                         break;
-                    case FishType::ORANGE:
-                        orange_fish.Draw(camera, object_shader, renderer);
-                        break;*/
                     }
                 }
             }
@@ -1833,18 +1848,16 @@ int main()
                     case FishType::BASIC:
                         basic_fish.Draw(camera, object_shader, renderer);
                         break;
-                    /*case FishType::FANCY:
+                    
+                    case FishType::FANCY:
                         fancy_fish.Draw(camera, object_shader, renderer);
                         break;
                     case FishType::BLUE:
-                        blue_fish.Draw(camera, object_shader, renderer);
+                        //blue_fish.Draw(camera, object_shader, renderer);
                         break;
                     case FishType::GREEN_ORANGE:
                         green_orange_fish.Draw(camera, object_shader, renderer);
                         break;
-                    case FishType::ORANGE:
-                        orange_fish.Draw(camera, object_shader, renderer);
-                        break;*/
                     }
                 }
             }
@@ -2266,18 +2279,15 @@ int main()
                     case FishType::BASIC:
                         basic_fish.Draw(camera, object_shader, renderer);
                         break;
-                    /*case FishType::FANCY:
+                    case FishType::FANCY:
                         fancy_fish.Draw(camera, object_shader, renderer);
                         break;
                     case FishType::BLUE:
-                        blue_fish.Draw(camera, object_shader, renderer);
+                        ///blue_fish.Draw(camera, object_shader, renderer);
                         break;
                     case FishType::GREEN_ORANGE:
                         green_orange_fish.Draw(camera, object_shader, renderer);
                         break;
-                    case FishType::ORANGE:
-                        orange_fish.Draw(camera, object_shader, renderer);
-                        break;*/
                     }
                 }
             }
